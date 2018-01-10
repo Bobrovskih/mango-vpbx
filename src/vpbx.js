@@ -2,7 +2,7 @@ const Helpers = require('./helpers');
 const Worker = require('./worker');
 
 /**
- * Класс для работы с API Виртуальной АТС от MANGO OFFICE
+ * Класс для API Виртуальной АТС от MANGO OFFICE
  */
 class VPBX {
 	/**
@@ -20,16 +20,73 @@ class VPBX {
      * @param {any} json - json параметры
      */
 	call(json) {
+		Helpers.setCommandId(json);
+
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify(json));
 
 		const options = {
 			url: Helpers.url('call'),
-			method: 'POST',
-			json: true,
 			formData
 		};
         
 		return new Worker(options);
+	}
+
+	/**
+	 * Выполняет запрос на групповой звонок
+	 * @param {any} json - параметры
+	 */
+	callGroup(json) {
+		Helpers.setCommandId(json);
+
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify(json));
+
+		const options = {
+			url: Helpers.url('callGroup'),
+			formData
+		};
+        
+		return new Worker(options);
+	}
+
+	/**
+	 * Выполняет запрос сотрудников.
+	 * Без параметров вернет всех сотрудников.
+	 * @param {any=} json - параметры
+	 */
+	users(json = {}) {
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify(json));
+
+		const options = {
+			url: Helpers.url('users'),
+			formData
+		};
+
+		return new Worker(options);
+	}
+
+
+	/**
+	 * Выполняет запрос статистики
+	 * @param {any=} json - параметры
+	 * @return {Promise<string>}
+	 * @async
+	 */
+	async stats(json) {
+		let key;
+
+		{
+			const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify(json));
+			const options = { url: Helpers.url('statsRequest'), formData };
+			({ key } = await new Worker(options));
+		}
+
+		{
+			const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify({ key }));
+			const options = { url: Helpers.url('statsResult'), formData };
+			const result = await new Worker(options);
+			return result;
+		}
 	}
 }
 

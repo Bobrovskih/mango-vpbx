@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 /**
- * Класс для расчитывания значения sign
+ * Класс для расчета значения sign
  */
 class Sign {
 	/**
@@ -15,6 +15,11 @@ class Sign {
 		this.apiSalt = apiSalt;
 		this.json = json.toString();
 	}
+
+	/**
+	 * Выполняет расчет sign и возвращает его.
+	 * @return {string}
+	 */
 	calc() {
 		const input = this.apiKey + this.json + this.apiSalt;
 		return crypto.createHash('sha256').update(input).digest('hex');
