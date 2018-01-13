@@ -39,6 +39,14 @@ class Helpers {
 	}
 
 	/**
+	 * Устанавливает пустой sms_sender если не задан.
+	 * @param {any} json - параметры
+	 */
+	static setSMSSender(json) {
+		json.sms_sender = json.sms_sender || '';
+	}
+
+	/**
 	 * Проверяет API запрос на успех.
 	 * Вернет true если от ВАТС вернулся код 1000.
 	 * @param {string|number} vpbxCode - код ВАТС

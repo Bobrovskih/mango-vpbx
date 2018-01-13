@@ -88,6 +88,23 @@ class VPBX {
 			return result;
 		}
 	}
+
+	/**
+	 * Выполняет запрос на отправку смс
+	 * @param {any} json - параметры
+	 */
+	sms(json) {
+		Helpers.setCommandId(json);
+		Helpers.setSMSSender(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, JSON.stringify(json));
+
+		const options = {
+			url: Helpers.url('sms'),
+			formData
+		};
+
+		return new Worker(options);
+	}
 }
 
 module.exports = VPBX;
