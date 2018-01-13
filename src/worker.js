@@ -7,7 +7,7 @@ class Worker {
 		this.options = options;
 		this.setDefaults();
 		this.disableReject();
-		this.tranformError();
+		this.transformResponse();
 		this.userAgent();
 		return this.send();
 	}
@@ -21,8 +21,8 @@ class Worker {
 		this.options.simple = false;
 	}
 
-	tranformError() {
-		this.options.transform = Transform.message;
+	transformResponse() {
+		this.options.transform = this.options.transform || Transform.default;
 	}
 
 	userAgent() {

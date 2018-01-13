@@ -1,21 +1,7 @@
-
-/**
- * суфиксы url-ов для API команд
- */
-const suffix = {
-	call: 'commands/callback',
-	callGroup: 'commands/callback_group',
-	users: 'config/users/request',
-	statsRequest: 'stats/request',
-	statsResult: 'stats/result',
-	recording: 'queries/recording/post',
-	sms: 'commands/sms'
-};
-
 /**
  * ВАТС код:сообщение
  */
-const vpbxMessage = {
+const vpbx = {
 	1000: 'Действие успешно выполнено',
 	1100: 'Вызов завершен в нормальном режиме',
 	1110: 'Вызов завершен вызывающим абонентом',
@@ -118,7 +104,7 @@ const vpbxMessage = {
 /**
  * HTTP код:сообщение
  */
-const httpMessage = {
+const http = {
 	0: 'Запрос не удался',
 	200: 'OK',
 	400: 'Некорректный запрос',
@@ -126,12 +112,11 @@ const httpMessage = {
 	403: 'Доступ запрещен',
 	404: 'Запрашиваемый адрес не найден',
 	500: 'Внутренняя ошибка',
-	503: 'Сервер не доступен'
+	503: 'Превышен лимит запросов. Повторите запрос позже.'
 };
 
 module.exports = {
-	suffix,
-	vpbxMessage,
-	httpMessage
+	vpbx,
+	http
 };
 

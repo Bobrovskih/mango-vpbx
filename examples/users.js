@@ -12,8 +12,8 @@ async function main() {
 	{
 		// запрос только сотрудника с внутренним номером 5000
 		const json = { extension: 5000 };
-		const { success, users } = await vpbx.users(json);
-		console.log(success, users);
+		const { success, users, message } = await vpbx.users(json);
+		console.log(success, users, message);
 	}
 }
 

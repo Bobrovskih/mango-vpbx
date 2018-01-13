@@ -1,7 +1,7 @@
-const { suffix, httpMessage } = require('./constant');
-const Sign = require('./sign');
+const messages = require('./messages');
+const urls = require('./urls');
 
-const BASEURL = 'https://app.mango-office.ru/vpbx/';
+const Sign = require('./sign');
 
 /**
  * Класс со вспомогательными методами
@@ -14,10 +14,14 @@ class Helpers {
      * @param {string} json
      *
      */
-	static createForm(apiKey, apiSalt, json) {
+	static createForm(apiKey, apiSalt, parameters) {
+		const json = JSON.stringify(parameters);
+		const sign = Sign.calc(apiKey, apiSalt, json);
+		const vpbx_api_key = apiKey;
+
 		return {
-			vpbx_api_key: apiKey,
-			sign: new Sign(apiKey, apiSalt, json).calc(),
+			vpbx_api_key,
+			sign,
 			json
 		};
 	}
@@ -27,7 +31,7 @@ class Helpers {
 	 * @param {string} method - название вызываемого метода
 	 */
 	static url(method) {
-		return BASEURL + suffix[method];
+		return urls.base + urls.suffix[method];
 	}
 
 	/**
@@ -44,6 +48,14 @@ class Helpers {
 	 */
 	static setSMSSender(json) {
 		json.sms_sender = json.sms_sender || '';
+	}
+
+	/**
+	 * Устанавливает action:download по умолчанию
+	 * @param {any} json - параметры
+	 */
+	static setAction(json) {
+		json.action = json.action || 'download';
 	}
 
 	/**
@@ -64,7 +76,7 @@ class Helpers {
 	 */
 	static httpMessage(httpCode) {
 		const code = Number(httpCode) || 0;
-		return httpMessage[code];
+		return messages.http[code];
 	}
 }
 

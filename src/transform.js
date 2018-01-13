@@ -1,19 +1,20 @@
-const { vpbxMessage } = require('./constant');
+const messages = require('./messages');
 const Helpers = require('./helpers');
 
 class Transform {
 	/**
 	 * Метод для определения текста ошибки ВАТС по коду.
 	 * @param {any} body - тело ответа из request-promise
+	 * @param {any} res - readable объект из request-promise
 	 */
-	static message(body, res) {
+	static default(body, res) {
 		let temp;
 		
 		if (res.statusCode === 200) {
 			temp = {
 				success: Helpers.isSuccess(body.result),
 				result: body.result,
-				message: vpbxMessage[body.result],
+				message: messages.vpbx[body.result],
 				users: body.users,
 				key: body.key
 			};
@@ -25,9 +26,6 @@ class Transform {
 			};
 		}
 
-		if (typeof body === 'string') {
-			temp.stats = body;
-		}
 
 		for (const key in temp) {
 			if (temp[key] === undefined || temp[key] === null) {
@@ -36,6 +34,26 @@ class Transform {
 		}
 
 		return temp;
+	}
+
+	static statsResult(body, res) {
+		if (res.statusCode === 200) {
+			return { stats: body };
+		}
+		return {
+			success: false,
+			message: messages.vpbx[body.result]
+		};
+	}
+	
+	static recording(body, res) {
+		if (res.statusCode === 302) {
+			return { tempLink: res.headers.location };
+		}
+		return {
+			success: false,
+			message: messages.vpbx[body.result]
+		};
 	}
 }
 
