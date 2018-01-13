@@ -4,29 +4,37 @@ const https = require('https');
 
 class Storage {
 	/**
-     * Возвращает абсолютный путь на диске
-     * @param {string} customPath - относительный путь
+     * Скачивает файл GET запросом
+     * @param {string} urlFile - url-адрес файла
+     * @param {string} folder - путь на диске
      */
-	static absolutePath(customPath) {
-		return path.join(customPath);
+	static downloadFile(urlFile, folder) {
+		return new Promise((resolve, reject) => {
+			https.get(urlFile, (res) => {
+				const fileName = this.fileName(res);
+				const fullPath = path.join(folder, fileName);
+
+				const writable = fs.createWriteStream(fullPath);
+				res.pipe(writable)
+					.on('finish', empty => resolve({ success: true, filename: fullPath }))
+					.on('error', error => reject({ success: false, message: error }));
+			});
+		});
 	}
 
 	/**
-     * Скачивает файл GET запросом
-     * @param {string} urlFile - url-адрес файла
-     * @param {string} pathDisk - путь на диске
-     * @async
-     */
-	static async downloadFile(urlFile, pathDisk) {
-		const writable = fs.createWriteStream(this.normalizePath(pathDisk));
-
-		return new Promise((resolve, reject) => {
-			https.get(urlFile, (res) => {
-				res.pipe(writable)
-					.on('end', empty => resolve())
-					.on('error', err => reject(err));
-			});
-		});
+	 * Вовзращает имя файла из заголовка Content-Disposition
+	 * @param {any} res - респонс из https модуля
+	 * @return {string}
+	 */
+	static fileName(res) {
+		const contDisposition = res.headers['content-disposition'];
+		const pattern = /filename="(.*)"/i;
+		const match = contDisposition.match(pattern);
+		if (!match) {
+			return `unknown${Date.now()}.mp3`;
+		}
+		return match[1];
 	}
 }
 

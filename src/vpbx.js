@@ -1,6 +1,7 @@
 const Helpers = require('./helpers');
 const Worker = require('./worker');
 const Transform = require('./transform');
+const Storage = require('./storage');
 
 /**
  * Класс для API Виртуальной АТС от MANGO OFFICE
@@ -23,7 +24,7 @@ class VPBX {
 	call(json) {
 		Helpers.setCommandId(json);
 
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'call');
 
 		const options = {
 			url: Helpers.url('call'),
@@ -40,7 +41,7 @@ class VPBX {
 	callGroup(json) {
 		Helpers.setCommandId(json);
 
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'callGroup');
 
 		const options = {
 			url: Helpers.url('callGroup'),
@@ -56,7 +57,7 @@ class VPBX {
 	 * @param {any=} json - параметры
 	 */
 	users(json = {}) {
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'users');
 
 		const options = {
 			url: Helpers.url('users'),
@@ -77,25 +78,41 @@ class VPBX {
 		let key;
 
 		{
-			const formData = Helpers.createForm(this.apiKey, this.apiSalt, json);
+			const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'statsRequest');
 			const options = {
 				url: Helpers.url('statsRequest'),
 				formData
 			};
-			({
-				key
-			} = await new Worker(options));
+			({ key } = await new Worker(options));
 		}
 
 		{
-			const formData = Helpers.createForm(this.apiKey, this.apiSalt, { key });
+			const formData = Helpers.createForm(this.apiKey, this.apiSalt, { key }, 'statsResult');
 			const options = {
 				url: Helpers.url('statsResult'),
 				transform: Transform.statsResult,
 				formData
 			};
-			const result = await new Worker(options);
-			return result;
+
+			let stats;
+			let code;
+			let success;
+			let message;
+
+			let attempt = 0;
+			const maxAttempt = 5;
+
+			do {
+				attempt += 1;
+				({ stats, code, success, message } = await new Worker(options));
+				await Helpers.sleep(5000);
+			} while (code === 204 && attempt < maxAttempt);
+
+			if (success && stats) {
+				stats = Helpers.statsToArray(stats);
+			}
+			
+			return { stats, success, message };
 		}
 	}
 
@@ -106,7 +123,7 @@ class VPBX {
 	sms(json) {
 		Helpers.setCommandId(json);
 		Helpers.setSMSSender(json);
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'sms');
 
 		const options = {
 			url: Helpers.url('sms'),
@@ -122,12 +139,8 @@ class VPBX {
 	 * @async
 	 */
 	async recording(json) {
-		const methodName = 'recording';
-
-		const pathToFile = Helpers.normalizePath(json.path);
-		
 		Helpers.setAction(json);
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, methodName);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'recording');
 
 		const options = {
 			url: Helpers.url('recording'),
@@ -136,8 +149,8 @@ class VPBX {
 		};
 
 		const { tempLink } = await new Worker(options);
-		const { file } = await Helpers.downloadFile(tempLink, pathToFile);
-		return file;
+		const file = await Storage.downloadFile(tempLink, json.folder);
+		return { success: true, file };
 	}
 }
 

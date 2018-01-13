@@ -9,10 +9,10 @@ async function main() {
 		// получение записи разговора
 		const json = {
 			recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow',
-			path: '.vscode/'
+			folder: 'C:/mango-vpbx/downloads/'
 		};
-		const { success } = await vpbx.recording(json);
-		console.log(success);
+		const { success, file } = await vpbx.recording(json);
+		console.log(success, file);
 	}
 }
 

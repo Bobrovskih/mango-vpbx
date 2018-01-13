@@ -38,7 +38,25 @@ class Transform {
 
 	static statsResult(body, res) {
 		if (res.statusCode === 200) {
-			return { stats: body };
+			return {
+				success: true,
+				code: 200,
+				stats: body
+			};
+		}
+		if (res.statusCode === 204) {
+			return {
+				success: false,
+				code: 204,
+				message: 'Данные еще не подготовлены. Запрос данных следует повторить.'
+			};
+		}
+		if (res.statusCode === 404) {
+			return {
+				success: false,
+				code: 404,
+				message: 'Данные не найдены, передан неправильный/устаревший ключ key.'
+			};
 		}
 		return {
 			success: false,

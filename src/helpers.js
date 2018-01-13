@@ -1,7 +1,10 @@
 const messages = require('./messages');
 const urls = require('./urls');
 
+const _ = require('lodash');
+
 const Sign = require('./sign');
+const parameters = require('./parameters');
 
 /**
  * Класс со вспомогательными методами
@@ -14,8 +17,9 @@ class Helpers {
      * @param {string} json
      *
      */
-	static createForm(apiKey, apiSalt, parameters) {
-		const json = JSON.stringify(parameters);
+	static createForm(apiKey, apiSalt, params, method) {
+		let json = Helpers.filterJSON(params, method);
+		json = JSON.stringify(json);
 		const sign = Sign.calc(apiKey, apiSalt, json);
 		const vpbx_api_key = apiKey;
 
@@ -26,6 +30,21 @@ class Helpers {
 		};
 	}
 	
+	/**
+	 * Удаляет параметры по маске.
+	 * Возвращает новый объект.
+	 * @param {any} json - параметры
+	 * @param {string} method - название API метода
+	 * @return {any}
+	 */
+	static filterJSON(json, method) {
+		const mask = parameters[method];
+		const maskProperties = _.keys(mask);
+
+		const result = _.pick(json, maskProperties);
+		return result;
+	}
+
 	/**
 	 * Вовращает url для API запроса
 	 * @param {string} method - название вызываемого метода
@@ -77,6 +96,23 @@ class Helpers {
 	static httpMessage(httpCode) {
 		const code = Number(httpCode) || 0;
 		return messages.http[code];
+	}
+
+	/**
+	 * Делает паузу
+	 * @param {number} delay - время в миллисекундах
+	 * @return {Promise<void>}
+	 */
+	static sleep(delay = 1) {
+		return new Promise(resolve => setTimeout(resolve, delay));
+	}
+
+	/**
+	 * Преобразует статистику вызовов из строки в массив
+	 * @param {string} stats - статистика вызовов
+	 */
+	static statsToArray(stats) {
+		return stats.split('\r\n').map(item => item.split(';'));
 	}
 }
 
