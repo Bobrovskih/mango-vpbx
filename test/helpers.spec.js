@@ -252,7 +252,7 @@ describe('метод Helpers.isEmptyObject', () => {
 	});
 
 	it('undefined', () => {
-		const source = '';
+		const source = undefined;
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});

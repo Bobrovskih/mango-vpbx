@@ -77,7 +77,7 @@ class Helpers {
 	/**
 	 * Проверяет является ли пустым объектом (нет ниодного свойства)
 	 * @param {any} input - данные
-	 * @param {boolean}
+	 * @return {boolean}
 	 */
 	static isEmptyObject(input) {
 		const type = Helpers.typeOf(input);
@@ -91,6 +91,7 @@ class Helpers {
 	/**
 	 * Определяет тип переменной.
 	 * @param {any} variable - переменная
+	 * @return {string} - в нижнем регистре
 	 */
 	static typeOf(variable) {
 		let type = Object.prototype.toString.call(variable);
