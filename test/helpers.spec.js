@@ -2,7 +2,7 @@ const {
 	expect
 } = require('chai');
 const Helpers = require('../src/helpers');
-
+const parameters = require('../src/parameters');
 
 describe('hello unit', () => {
 	it('true is true', () => {
@@ -11,69 +11,255 @@ describe('hello unit', () => {
 });
 
 
-describe('Helper.filterJSON', () => {
-	it('{} => sms', () => {
-		const src = {};
-		const result = Helpers.filterJSON(src, 'sms');
-		expect(result).deep.equal({});
-	});
-
-	it('лишние параметры => call', () => {
-		const src = {
-			cmdid: 'wkfnwe',
-			what: true,
-			extension: '1000',
-			from_number: '74951234567',
-			to_number: '74950001122'
-		};
-		const result = Helpers.filterJSON(src, 'call');
-		expect(result).deep.equal({ to_number: '74950001122' });
-	});
-    
-	it('верные параметры => call', () => {
-		const src = {
-			command_id: 'cmd-111222',
-			from: {
-				extension: '5000',
-				number: '74952129298'
-			},
-			to_number: '74950001122',
-			line_number: '74956667788'
-		};
-		const result = Helpers.filterJSON(src, 'call');
-		expect(result).deep.equal(src);
-	});
-    
-	it('лишние параметры => recording', () => {
-		const src = {
-			recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow',
-			path: '.vscode/'
-		};
-        
-		const result = Helpers.filterJSON(src, 'recording');
-		expect(result).deep.equal({ recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow' });
-	});
-    
-	it('верные параметры => recording', () => {
-		const src = {
-			recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow',
-			action: 'download'
-		};
-        
-		const result = Helpers.filterJSON(src, 'recording');
-		expect(result).deep.equal({ recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow', action: 'download' });
-	});
-
-	it('лишний вложенный параметр => stats', () => {
-		const src = {
+describe('метод Helpers.filter ( * - вложенные )', () => {
+	it('неверные *string; statsRequest', () => {
+		const source = {
 			date_from: '1481630491',
 			date_to: '1481734491',
 			from: {
 				ext: '5000'
 			}
 		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481734491'
+		};
         
-		const result = Helpers.filterJSON(src, 'statsRequest');
-		expect(result).deep.equal({ date_from: '1481630491', date_to: '1481734491' });
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('неверные string; statsRequest', () => {
+		const source = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			filds: 'records,start,finish',
+			from: {
+				extension: '5000'
+			}
+		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			from: {
+				extension: '5000'
+			}
+		};
+
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('неверные string, string; statsRequest ', () => {
+		const source = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			filds: 'records,start,finish',
+			from: {
+				extension: '5000'
+			},
+			fail: 'deleteplz'
+		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			from: {
+				extension: '5000'
+			}
+		};
+
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('неверные *boolean, string; statsRequest', () => {
+		const source = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			filds: 'records,start,finish',
+			from: {
+				extension: '5000',
+				wrongProp: true
+			},
+			fail: 'deleteplz'
+		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			from: {
+				extension: '5000'
+			}
+		};
+
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('неверные *[], []; statsRequest', () => {
+		const source = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			filds: 'records,start,finish',
+			from: {
+				extension: '5000',
+				wrongProp: []
+			},
+			wrong: [
+				{ success: true }
+			]
+		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481734491',
+			from: {
+				extension: '5000'
+			}
+		};
+
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+
+	it('верные; statsRequest', () => {
+		const source = {
+			date_from: '1481630491',
+			date_to: '1481637491',
+			fields: 'record, start, finish',
+			from: {
+				extension: '5000',
+				number: '74951002030'
+			},
+			to: {
+				extension: '6000',
+				number: '74954005060'
+			},
+			call_party: {
+				extension: '222',
+				number: '74957008090'
+			},
+			request_id: 'customreqid'
+		};
+		const due = {
+			date_from: '1481630491',
+			date_to: '1481637491',
+			fields: 'record, start, finish',
+			from: {
+				extension: '5000',
+				number: '74951002030'
+			},
+			to: {
+				extension: '6000',
+				number: '74954005060'
+			},
+			call_party: {
+				extension: '222',
+				number: '74957008090'
+			},
+			request_id: 'customreqid'
+		};
+
+		const mask = parameters.statsRequest;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('пустой {}; users', () => {
+		const source = {};
+		const due = {};
+
+		const mask = parameters.users;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+    
+	it('неверные string; call', () => {
+		const source = {
+			command_id: 'cmd-1241221',
+			from: {
+				extension: '5000',
+				nomer: '74952129298'
+			},
+			to_number: '74951002030'
+		};
+		const due = {
+			command_id: 'cmd-1241221',
+			from: {
+				extension: '5000'
+			},
+			to_number: '74951002030'
+		};
+		const mask = parameters.call;
+		const result = Helpers.filter(source, mask);
+
+		expect(result).deep.equal(due);
+	});
+});
+
+
+describe('метод Helpers.isEmptyObject', () => {
+	it('{}', () => {
+		const source = {};
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(true);
+	});
+    
+	it('"hello"', () => {
+		const source = 'hello';
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('10', () => {
+		const source = 10;
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('null', () => {
+		const source = null;
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('true', () => {
+		const source = true;
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('[]', () => {
+		const source = [];
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('', () => {
+		const source = '';
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+
+	it('undefined', () => {
+		const source = '';
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
+	});
+    
+	it('Symbol({})', () => {
+		const source = Symbol({});
+		const result = Helpers.isEmptyObject(source);
+		expect(result).equal(false);
 	});
 });

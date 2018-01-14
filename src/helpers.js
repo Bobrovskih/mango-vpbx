@@ -11,14 +11,15 @@ const parameters = require('./parameters');
  */
 class Helpers {
 	/**
-     * Создает (форму) параметры для отправки в POST запросе
-     * @param {string} apiKey
-     * @param {string} apiSalt
-     * @param {string} json
-     *
-     */
+	 * Создает (форму) параметры для отправки в POST запросе
+	 * @param {string} apiKey
+	 * @param {string} apiSalt
+	 * @param {string} json
+	 *
+	 */
 	static createForm(apiKey, apiSalt, params, method) {
-		let json = Helpers.filterJSON(params, method);
+		const mask = parameters[method];
+		let json = Helpers.filter(params, mask);
 		json = JSON.stringify(json);
 		const sign = Sign.calc(apiKey, apiSalt, json);
 		const vpbx_api_key = apiKey;
@@ -29,20 +30,73 @@ class Helpers {
 			json
 		};
 	}
-	
+
 	/**
-	 * Удаляет параметры по маске.
-	 * Возвращает новый объект.
+	 * Фильтрует свойства объекта по маске.
+	 * Возвращает новый объект(не изменяет исходный)
+	 *
 	 * @param {any} json - параметры
-	 * @param {string} method - название API метода
+	 * @param {any} mask - маска объекта
 	 * @return {any}
 	 */
-	static filterJSON(json, method) {
-		const mask = parameters[method];
-		const maskProperties = _.keys(mask);
+	static filter(json, mask = {}) {
+		const pathArr = [];
+		let jsonCopy = _.cloneDeep(json);
 
-		const result = _.pick(json, maskProperties);
-		return result;
+		function bypass(obj) {
+			for (const key in obj) {
+				if (!_.has(obj, key)) continue;
+				const prop = obj[key];
+				if (!prop) continue;
+
+				const prefix = pathArr.join('.');
+				const pathOfKey = prefix ? `${prefix}.${key}` : key;
+				const valueInMask = _.get(mask, pathOfKey);
+				if (!valueInMask) {
+					jsonCopy = _.omit(jsonCopy, pathOfKey);
+
+					const parentValue = _.get(jsonCopy, prefix);
+					if (Helpers.isEmptyObject(parentValue)) {
+						jsonCopy = _.omit(jsonCopy, prefix);
+					}
+					continue;
+				}
+
+				if (Helpers.typeOf(prop) === 'object') {
+					pathArr.push(key);
+					bypass(prop);
+				}
+			}
+			pathArr.pop();
+			return jsonCopy;
+		}
+		return bypass(jsonCopy);
+	}
+
+
+	/**
+	 * Проверяет является ли пустым объектом (нет ниодного свойства)
+	 * @param {any} input - данные
+	 * @param {boolean}
+	 */
+	static isEmptyObject(input) {
+		const type = Helpers.typeOf(input);
+		if (type === 'object') {
+			const keysCount = _.keys(input).length;
+			return keysCount === 0;
+		}
+		return false;
+	}
+
+	/**
+	 * Определяет тип переменной.
+	 * @param {any} variable - переменная
+	 */
+	static typeOf(variable) {
+		let type = Object.prototype.toString.call(variable);
+		type = type.slice(8, -1);
+		type = type.toLowerCase();
+		return type;
 	}
 
 	/**
@@ -99,9 +153,11 @@ class Helpers {
 	}
 
 	/**
-	 * Делает паузу
+	 * делает паузу на заданное время
 	 * @param {number} delay - время в миллисекундах
 	 * @return {Promise<void>}
+	 * @example
+	 * await Helpers.sleep(5000);
 	 */
 	static sleep(delay = 1) {
 		return new Promise(resolve => setTimeout(resolve, delay));
@@ -110,6 +166,7 @@ class Helpers {
 	/**
 	 * Преобразует статистику вызовов из строки в массив
 	 * @param {string} stats - статистика вызовов
+	 * @return {any[]}
 	 */
 	static statsToArray(stats) {
 		return stats.split('\r\n').map(item => item.split(';'));
