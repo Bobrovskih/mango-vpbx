@@ -427,6 +427,16 @@ describe('метод Helpers.setCommandId', () => {
 	});
 
 	it('случайный', () => {
+		const source = {
+			from: {
+				extension: '5000'
+			},
+			to_number: '74952129298',
+			command_id: 'mycmd-1242153254'
+		};
+		const due = 'mycmd-1242153254';
 
+		Helpers.setCommandId(source);
+		expect(source.command_id).to.equal(due);
 	});
 });
