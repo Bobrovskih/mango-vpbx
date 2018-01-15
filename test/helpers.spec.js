@@ -263,3 +263,170 @@ describe('метод Helpers.isEmptyObject', () => {
 		expect(result).equal(false);
 	});
 });
+
+describe('метод Helpers.typeOf', () => {
+	it('boolean', () => {
+		const source = false;
+		const result = Helpers.typeOf(source);
+		expect(result).equal('boolean');
+	});
+
+	it('number', () => {
+		const source = 1;
+		const result = Helpers.typeOf(source);
+		expect(result).equal('number');
+	});
+	
+	it('string', () => {
+		const source = 'hello';
+		const result = Helpers.typeOf(source);
+		expect(result).equal('string');
+	});
+
+	it('object', () => {
+		const source = {};
+		const result = Helpers.typeOf(source);
+		expect(result).equal('object');
+	});
+
+	it('array', () => {
+		const source = [];
+		const result = Helpers.typeOf(source);
+		expect(result).equal('array');
+	});
+
+	it('null', () => {
+		const source = null;
+		const result = Helpers.typeOf(source);
+		expect(result).equal('null');
+	});
+
+	it('undefined', () => {
+		const source = undefined;
+		const result = Helpers.typeOf(source);
+		expect(result).equal('undefined');
+	});
+
+	it('symbol', () => {
+		const source = Symbol('example');
+		const result = Helpers.typeOf(source);
+		expect(result).equal('symbol');
+	});
+});
+
+describe('метод Helpers.statsToArray', () => {
+	it('случайная выгрузка', () => {
+		const source = '[];1481630614;1481630633;1481630614;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent\r\n[];1481630686;1481630703;1481630687;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent';
+		const due = [
+			[
+				'[]',
+				'1481630614',
+				'1481630633',
+				'1481630614',
+				'131',
+				'sip:a.mango@domain.mangosip.ru',
+				'',
+				'sip:user2@domain.mangosip.ru',
+				'1110',
+				'',
+				'abonent'
+			],
+			[
+				'[]',
+				'1481630686',
+				'1481630703',
+				'1481630687',
+				'131',
+				'sip:a.mango@domain.mangosip.ru',
+				'',
+				'sip:user2@domain.mangosip.ru',
+				'1110',
+				'',
+				'abonent'
+			]
+		];
+		const result = Helpers.statsToArray(source);
+		expect(result).deep.equal(due);
+	});
+});
+
+describe('метод Helpers.isSuccess', () => {
+	it('code 0', () => {
+		const source = 0;
+		const due = true;
+		
+		const result = Helpers.isSuccess(source);
+		expect(result).equal(due);
+	});
+
+	it('code 3103', () => {
+		const source = 3103;
+		const due = false;
+		
+		const result = Helpers.isSuccess(source);
+		expect(result).equal(due);
+	});
+
+	it('code 1000', () => {
+		const source = 1000;
+		const due = true;
+		
+		const result = Helpers.isSuccess(source);
+		expect(result).equal(due);
+	});
+});
+
+describe('метод Helpers.url', () => {
+	it('call', () => {
+		const source = 'call';
+		const due = 'https://app.mango-office.ru/vpbx/commands/callback';
+
+		const result = Helpers.url(source);
+		expect(result).equal(due);
+	});
+
+	it('statsRequest', () => {
+		const source = 'statsRequest';
+		const due = 'https://app.mango-office.ru/vpbx/stats/request';
+
+		const result = Helpers.url(source);
+		expect(result).equal(due);
+	});
+});
+
+describe('метод Helpers.createForm', () => {
+	it('случайная форма', () => {
+		const source = {
+			apiKey: 'ekfn3fno329f204fj59g23h0f294f23d',
+			apiSalt: 'idn239uf90i1d23283dh204gfh23dj3d',
+			params: { date_from: '1481630491', date_to: '1481734491' },
+			method: 'statsRequest'
+		};
+		const due = {
+			vpbx_api_key: 'ekfn3fno329f204fj59g23h0f294f23d',
+			sign: '727f134b4ae7b45e71e08b2ff2d846a1cf0460119cd4a351754c5365817f8068',
+			json: '{"date_from":"1481630491","date_to":"1481734491"}'
+		};
+
+		const result = Helpers.createForm(source.apiKey, source.apiSalt, source.params, source.method);
+		expect(result).deep.equal(due);
+	});
+});
+
+describe('метод Helpers.setCommandId', () => {
+	it('установка по-умолчанию', () => {
+		const source = {
+			from: {
+				extension: '5000'
+			},
+			to_number: '74952129298'
+		};
+
+		Helpers.setCommandId(source);
+		expect(source.command_id).to.exist;
+	});
+
+	it('случайный', () => {
+
+	});
+});
