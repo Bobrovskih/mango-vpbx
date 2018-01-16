@@ -1,5 +1,6 @@
 const messages = require('./messages');
 const Helpers = require('./helpers');
+const debug = require('debug')('mango-vpbx:worker');
 
 class Transform {
 	/**
@@ -9,7 +10,7 @@ class Transform {
 	 */
 	static default(body, res) {
 		let temp;
-		
+		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 200) {
 			temp = {
 				success: Helpers.isSuccess(body.result),
@@ -37,6 +38,7 @@ class Transform {
 	}
 
 	static statsResult(body, res) {
+		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 200) {
 			return {
 				success: true,
@@ -65,6 +67,7 @@ class Transform {
 	}
 	
 	static recording(body, res) {
+		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 302) {
 			return { tempLink: res.headers.location };
 		}

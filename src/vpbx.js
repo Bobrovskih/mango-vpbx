@@ -152,6 +152,75 @@ class VPBX {
 		const file = await Storage.downloadFile(tempLink, json.folder);
 		return { success: true, file };
 	}
+
+	/**
+	 * Выполняет запрос для завершения вызова
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	hangup(json) {
+		Helpers.setCommandId(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'hangup');
+
+		const options = {
+			url: Helpers.url('hangup'),
+			formData
+		};
+
+		return new Worker(options);
+	}
+
+	/**
+	 * Запрос для включения записи разговора
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	recordingStart(json) {
+		Helpers.setCommandId(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'recordingStart');
+
+		const options = {
+			url: Helpers.url('recordingStart'),
+			formData
+		};
+
+		return new Worker(options);
+	}
+
+
+	/**
+	 * Запрос для маршрутизации вызова
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	route(json) {
+		Helpers.setCommandId(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'route');
+
+		const options = {
+			url: Helpers.url('route'),
+			formData
+		};
+
+		return new Worker(options);
+	}
+
+	/**
+	 * Запрос для перевода вызова
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	transfer(json) {
+		Helpers.setCommandId(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'transfer');
+
+		const options = {
+			url: Helpers.url('transfer'),
+			formData
+		};
+
+		return new Worker(options);
+	}
 }
 
 module.exports = VPBX;

@@ -1,6 +1,6 @@
 {
   "name": "mango-vpbx",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "NodeJS SDK for API VPBX by MANGO OFFICE",
   "main": "index.js",
   "scripts": {

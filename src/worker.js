@@ -1,6 +1,7 @@
 const rp = require('request-promise');
 const Transform = require('./transform');
 const Helpers = require('./helpers');
+const debug = require('debug')('mango-vpbx:worker');
 
 class Worker {
 	constructor(options) {
@@ -32,6 +33,8 @@ class Worker {
 	}
 
 	send() {
+		debug(`<- ${this.options.method} ${this.options.url}`);
+		debug(JSON.stringify(this.options.formData));
 		return rp(this.options);
 	}
 }

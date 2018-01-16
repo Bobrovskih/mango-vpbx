@@ -15,7 +15,7 @@ const callGroup = {
 	line_number: 1
 };
 
-const callHangup = {
+const hangup = {
 	command_id: 1,
 	call_id: 1
 };
@@ -84,7 +84,7 @@ const recordingStart = {
 module.exports = {
 	call,
 	callGroup,
-	callHangup,
+	hangup,
 	route,
 	transfer,
 	users,
