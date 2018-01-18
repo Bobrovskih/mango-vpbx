@@ -2,6 +2,9 @@ const EventEmitter = require('events');
 const Helpers = require('./helpers');
 const { realtime } = require('./parameters');
 
+/**
+ * Класс для получения уведомлений от ВАТС
+ */
 class Realtime extends EventEmitter {
 	constructor(url) {
 		super();

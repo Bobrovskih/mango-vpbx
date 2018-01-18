@@ -247,6 +247,75 @@ vpbx.users(json); // => Promise<any>
 const { success, users } = await vpbx.users();
 ```
 
+## API RealTime
+API Realtime представляет собой набор запросов (уведомлений), которые направляются к внешней системе.
+
+### метод events
+Cоздает обработчики для прослушивания событий от ВАТС
+```js
+vpbx.events(url); // => Realtime
+```
+
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| url  | string   |  адрес внешней системы  |
+
+Пример использования
+```js
+const app = require('express')();
+
+const VPBX = require('mango-vpbx');
+
+const vpbx = new VPBX();
+
+const events = vpbx.events('http://localhost/endpoint/example');
+
+app.use(events.call);
+app.use(events.summary);
+app.use(events.recording);
+app.use(events.dtmf);
+app.use(events.sms);
+
+events.on('call', e => console.log('on events/call', e));
+events.on('summary', e => console.log('on events/summary', e));
+events.on('recording', e => console.log('on events/recording', e));
+events.on('dtmf', e => console.log('on events/dtmf', e));
+events.on('sms', e => console.log('on events/sms', e));
+
+events.on('data', e => console.log('on any events', e));
+
+app.use((req, res) => res.status(404).send({ error: 'not found' }));
+
+```
+
+## Класс Realtime
+Класс для создания обработчиков и получения уведомлений от ВАТС
+
+### метод call
+Обработчик "Уведомления о вызове"
+```js
+Realtime.call; // => Function
+```
+
+### метод sms
+Обработчик "Уведомления о результате смс"
+```js
+Realtime.sms; // => Function
+```
+
+### метод recording
+Обработчик "Уведомления о записи разговора"
+```js
+Realtime.recording; // => Function
+```
+
+### метод dtmf
+Обработчик "Уведомления о нажатиях DTMF клавиш"
+```js
+Realtime.dtmf; // => Function
+```
+
+
 ## Отладка
  Для логирования запросов необходимо задать переменную `process.env.DEBUG=mango-vpbx:worker`
  <br>

@@ -1,10 +1,11 @@
+
 const app = require('express')();
 
-const VPBX = require('../src/vpbx');
+const VPBX = require('../index');
 
 const vpbx = new VPBX();
 
-const events = vpbx.events('http://localhost//vpbx');
+const events = vpbx.events('http://localhost/endpoint/example');
 
 app.use(events.call);
 app.use(events.summary);
@@ -18,6 +19,6 @@ events.on('recording', e => console.log('on events/recording', e));
 events.on('dtmf', e => console.log('on events/dtmf', e));
 events.on('sms', e => console.log('on events/sms', e));
 
-events.on('data', e => console.log('on any event', e));
+events.on('data', e => console.log('on any events', e));
 
 app.use((req, res) => res.status(404).send({ error: 'not found' }));
