@@ -17,7 +17,16 @@ const suffix = {
 	sms: 'commands/sms'
 };
 
+const realtime = {
+	call: 'events/call',
+	sms: 'events/sms',
+	recording: 'events/recording',
+	dtmf: 'events/dtmf',
+	summary: 'events/summary'
+};
+
 module.exports = {
 	base,
-	suffix
+	suffix,
+	realtime
 };

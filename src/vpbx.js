@@ -2,6 +2,7 @@ const Helpers = require('./helpers');
 const Worker = require('./worker');
 const Transform = require('./transform');
 const Storage = require('./storage');
+const Realtime = require('./realtime');
 
 /**
  * Класс для API Виртуальной АТС от MANGO OFFICE
@@ -220,6 +221,15 @@ class VPBX {
 		};
 
 		return new Worker(options);
+	}
+
+	/**
+	 * создает обработчики для прослушивания событий от ВАТС
+	 * (API RealTime)
+	 * @param {string} url - адрес внешней системы
+	 */
+	events(url) {
+		return new Realtime(url);
 	}
 }
 

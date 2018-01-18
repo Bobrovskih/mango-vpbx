@@ -1,8 +1,8 @@
+const _ = require('lodash');
+const url = require('url');
+
 const messages = require('./messages');
 const urls = require('./urls');
-
-const _ = require('lodash');
-
 const Sign = require('./sign');
 const parameters = require('./parameters');
 
@@ -171,6 +171,15 @@ class Helpers {
 	 */
 	static statsToArray(stats) {
 		return stats.split('\r\n').map(item => item.split(';'));
+	}
+
+	/**
+	 * Возвращает pathname от переданного урла
+	 * @param {string} input - урл
+	 * @return {string}
+	 */
+	static pathname(input) {
+		return url.parse(input).pathname;
 	}
 }
 
