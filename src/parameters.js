@@ -80,6 +80,13 @@ const recordingStart = {
 	call_party_number: 1
 };
 
+const dctUserInfo = {
+	number: 1
+};
+
+const dctUserHistory = {
+	number: 1
+};
 
 module.exports = {
 	call,
@@ -92,5 +99,7 @@ module.exports = {
 	statsResult,
 	recording,
 	recordingStart,
-	sms
+	sms,
+	dctUserInfo,
+	dctUserHistory
 };

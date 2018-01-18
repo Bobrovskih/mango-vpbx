@@ -14,7 +14,9 @@ const suffix = {
 	statsResult: 'stats/result',
 	recording: 'queries/recording/post',
 	recordingStart: 'commands/recording/start',
-	sms: 'commands/sms'
+	sms: 'commands/sms',
+	dctUserInfo: 'queries/user_info_by_dct_number',
+	dctUserHistory: 'queries/user_history_by_dct_number'
 };
 
 module.exports = {

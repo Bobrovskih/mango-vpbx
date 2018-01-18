@@ -221,6 +221,38 @@ class VPBX {
 
 		return new Worker(options);
 	}
+
+	/**
+	 * Запрос информации о посетителе сайта по динамическому номеру
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	dctUserInfo(json) {
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'dctUserInfo');
+
+		const options = {
+			url: Helpers.url('dctUserInfo'),
+			formData
+		};
+
+		return new Worker(options);
+	}
+
+	/**
+	 * Запрос информации о посетителе сайта по динамическому номеру
+	 * @param {json} - параметры
+	 * @return {Promise<any>}
+	 */
+	dctUserHistory(json) {
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'dctUserHistory');
+
+		const options = {
+			url: Helpers.url('dctUserHistory'),
+			formData
+		};
+
+		return new Worker(options);
+	}
 }
 
 module.exports = VPBX;
