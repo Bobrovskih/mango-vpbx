@@ -28,4 +28,4 @@ events.on('ping', e => console.log('check connection', e));
 events.on('data', e => console.log('on any events', e));
 
 app.use((req, res) => res.status(404).send({ error: 'not found' }));
-app.listen(8080);
+app.listen(80);
