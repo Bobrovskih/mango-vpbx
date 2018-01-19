@@ -322,6 +322,12 @@ Realtime.recording; // => Function
 Realtime.dtmf; // => Function
 ```
 
+### метод summary
+Обработчик "Уведомления о завершении вызова"
+```js
+Realtime.summary; // => Function
+```
+
 ### метод ping
 Обработчик "Проверить подключение" из Личного кабинета
 ```js
