@@ -263,28 +263,35 @@ vpbx.events(url); // => Realtime
 Пример использования
 ```js
 const app = require('express')();
+const bodyParser = require('body-parser');
 
-const VPBX = require('mango-vpbx');
+const VPBX = require('../index');
 
 const vpbx = new VPBX();
 
-const events = vpbx.events('http://localhost/endpoint/example');
+const events = vpbx.events('http://example.com/mango-vpbx');
+
+app.use(bodyParser.urlencoded());
 
 app.use(events.call);
 app.use(events.summary);
 app.use(events.recording);
 app.use(events.dtmf);
 app.use(events.sms);
+app.use(events.ping);
+
 
 events.on('call', e => console.log('on events/call', e));
 events.on('summary', e => console.log('on events/summary', e));
 events.on('recording', e => console.log('on events/recording', e));
 events.on('dtmf', e => console.log('on events/dtmf', e));
 events.on('sms', e => console.log('on events/sms', e));
+events.on('ping', e => console.log('check connection', e));
 
 events.on('data', e => console.log('on any events', e));
 
 app.use((req, res) => res.status(404).send({ error: 'not found' }));
+app.listen(80);
 
 ```
 
@@ -315,13 +322,27 @@ Realtime.recording; // => Function
 Realtime.dtmf; // => Function
 ```
 
+### метод ping
+Обработчик "Проверить подключение" из Личного кабинета
+```js
+Realtime.ping; // => Function
+```
+
 
 ## Отладка
  Для логирования запросов необходимо задать переменную `process.env.DEBUG=mango-vpbx:worker`
- <br>
  Пример лога:
  ```
   mango-vpbx:worker <- POST https://app.mango-office.ru/vpbx/commands/callback +213ms
   mango-vpbx:worker {"vpbx_api_key":"2fn293fg43gfh02h4ub3jd23o312u4bc","sign":"394h39ufhi20jg5gj54j9ug2i0j20j3ig0edjbopeef3ojefrf0e3ie2fjojejf0","json":"{\"from\":{\"extension\":\"5000\",\"number\":\"74991102914\"},\"to_number\":\"74952129298\",\"command_id\":\"cmd-1516131681519\"}"} +1ms
   mango-vpbx:worker -> 200 OK +189ms
  ```
+   <br>Для логирования ивентов необходимо задать переменную `process.env.DEBUG=mango-vpbx:events`
+   <br>Пример лога:
+ ```
+ mango-vpbx:events -> POST /mango-vpbx/events/call +22ms
+ mango-vpbx:events -> POST /mango-vpbx/events/summary +18ms
+ mango-vpbx:events -> POST /mango-vpbx/ping +49ms
+ ```
+
+<br>Для логирования запросов и ивентов необходимо задать переменную `process.env.DEBUG=mango-vpbx:*`

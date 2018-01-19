@@ -1,6 +1,7 @@
 const EventEmitter = require('events');
 const Helpers = require('./helpers');
-const { realtime } = require('./parameters');
+const { realtime } = require('./urls');
+const debug = require('debug')('mango-vpbx:events');
 
 /**
  * Класс для получения уведомлений от ВАТС
@@ -52,6 +53,14 @@ class Realtime extends EventEmitter {
 	get summary() {
 		return this.create('summary');
 	}
+
+	/**
+     * Обработчик "Проверить подключение" из ЛК
+     * @return {Function}
+     */
+	get ping() {
+		return this.create('ping');
+	}
     
 	/**
      * Создает обработчик
@@ -62,12 +71,27 @@ class Realtime extends EventEmitter {
 		const pattern = new RegExp(`${realtime[en]}/?$`, 'i');
 		return (req, res, next) => {
 			if (pattern.test(req.path)) {
-				this.emit('data', req.body);
-				this.emit(en, req.body);
+				debug(`-> ${req.method} ${req.url}`);
+				const payload = this.parser(req.body);
+				this.emit('data', payload);
+				this.emit(en, payload);
+				res.send({ success: true });
 				return;
 			}
 			next();
 		};
+	}
+
+	/**
+	 * Парсит параметры пост запроса
+	 * Возвращает json параметр как объект
+	 * @param {any} body - тело POST запроса
+	 * @return {any}
+	 */
+	parser(body) {
+		const { json, data } = body;
+		const payload = JSON.parse(json || data || {});
+		return payload;
 	}
 }
 

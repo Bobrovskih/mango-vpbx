@@ -22,7 +22,8 @@ const realtime = {
 	sms: 'events/sms',
 	recording: 'events/recording',
 	dtmf: 'events/dtmf',
-	summary: 'events/summary'
+	summary: 'events/summary',
+	ping: 'ping'
 };
 
 module.exports = {

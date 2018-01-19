@@ -1,6 +1,6 @@
 {
   "name": "mango-vpbx",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "NodeJS SDK for API VPBX by MANGO OFFICE",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,12 @@
     "office",
     "vpbx",
     "vats",
-    "api"
+    "api",
+    "sip",
+    "voip",
+    "realtime",
+    "apikey",
+    "apisalt"
   ],
   "author": "Bobrovskih A. <bobrovskih.artur@gmail.com>",
   "license": "ISC",
@@ -27,8 +32,9 @@
   },
   "homepage": "https://github.com/Bobrovskih/mango-vpbx#readme",
   "dependencies": {
+    "body-parser": "1.18.2",
     "debug": "3.1.0",
-    "express": "^4.16.2",
+    "express": "4.16.2",
     "lodash": "4.17.4",
     "request": "2.83.0",
     "request-promise": "4.2.2"
