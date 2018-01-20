@@ -201,7 +201,7 @@ class Helpers {
 	static operatorsMatch(input) {
 		const pattern = /^([><=])([><=])?/;
 		const result = input.match(pattern);
-		return result;
+		return result ? result.filter(item => !!item) : result;
 	}
 
 	/**
@@ -251,6 +251,17 @@ class Helpers {
 			return String(input).toLowerCase();
 		}
 		return input;
+	}
+
+	/**
+	 * Меняет имя ивента для события stat/result.
+	 * Меняет исходный объект
+	 * @param {any} filter - фильтр hear
+	 */
+	static fixStatResult(filter) {
+		if (filter.event === 'stats') {
+			filter.event = 'stat';
+		}
 	}
 }
 

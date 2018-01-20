@@ -19,10 +19,12 @@ const suffix = {
 
 const realtime = {
 	call: 'events/call',
-	sms: 'events/sms',
 	recording: 'events/recording',
 	dtmf: 'events/dtmf',
 	summary: 'events/summary',
+	sms: 'result/sms',
+	callback: 'result/callback',
+	stats: 'result/stat',
 	ping: 'ping'
 };
 

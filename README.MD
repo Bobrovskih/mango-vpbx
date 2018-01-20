@@ -55,6 +55,17 @@ const vpbx = new VPBX(apiKey, apiSalt);
 
 ## Методы
 Список возможных json параметров их значений для вызова API методов доступен в [официальной документации](https://www.mango-office.ru/upload/api/MangoOffice_VPBX_API_v1.9.pdf)
+
+Вызов методов возвращает промис, результат которого объект, содержащий свойства:
+
+| Свойство  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| success  | boolean  |  результат |
+| result   | number   |  код ответа ВАТС  |
+| message  | string   |  сообщение  |
+
+
+
 ### метод call
 Инициирование вызова от имени сотрудника
 
@@ -333,6 +344,68 @@ Realtime.summary; // => Function
 ```js
 Realtime.ping; // => Function
 ```
+
+### метод all
+Обработчик всех событий (только для метода hear)
+```js
+Realtime.all; // => Function
+```
+
+### метод hear
+Слушает события по заданному фильтру
+```js
+Realtime.hear(filter, handler); // => void
+```
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| filter  | object  |  фильтр для событий  |
+| handler  | function   |  функция-обработчик  |
+
+Аргумент `filter` должен иметь обязательное свойство `event` - имя события 
+(возможные значения: 'call', 'recording', 'summary', 'dtmf', 'sms', 'callback', 'stats', 'ping')
+
+Функция `handler` в качестве первого аргумента принимает json-объект, содержащий параметры события (список передаваемых параметров доступен в [официальной документации](https://www.mango-office.ru/upload/api/MangoOffice_VPBX_API_v1.9.pdf))
+
+Пример использования
+```js
+
+const app = require('express')();
+const bodyParser = require('body-parser');
+
+const VPBX = require('../index');
+
+const vpbx = new VPBX();
+
+const events = vpbx.events('http://example.com/mango-vpbx');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(events.all);
+
+events.hear({ event: 'ping' }, e => console.log('ping works!'));
+events.hear({ event: 'call' }, e => console.log('call event', e.location, e.call_state));
+
+app.use((req, res) => res.status(404).send({ error: 'not found' }));
+app.listen(80);
+
+```
+
+
+Обработчик "уведомления о завершении вызова" будет вызван только для исходящего звонка:
+```js
+events.hear({ event: 'summary', call_direction: '2' }, e => console.log('завершился исходящий звонок', e.entry_id));
+```
+
+Фильтр может состоять из нескольких параметров:
+```js
+events.hear({ event: 'recording', recording_state: 'Completed', completion_code: '1000' }, e => console.log('новая запись разговора!', e.recording_id));
+```
+
+В параметрах допускаются операторы сравнения:
+```js
+events.hear({ event: 'recording', completion_code: '>1000' }, e => console.log('ошибка сохранения записи разговора', e.recording_id, e.completion_code));
+```
+[Все примеры](examples/)
 
 
 ## Отладка
