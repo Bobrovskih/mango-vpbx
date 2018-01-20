@@ -166,7 +166,7 @@ describe('метод Realtime.testFilter - событие summary', () => {
 		call_direction: 1,
 		from: {
 			extension: '360',
-			number: 'sip:a.bobrovskih@tech.mangosip.ru'
+			number: 'sip:example@domain.mangosip.ru'
 		},
 		to: {
 			number: '74995013402'
