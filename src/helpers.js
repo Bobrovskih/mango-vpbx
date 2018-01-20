@@ -181,6 +181,77 @@ class Helpers {
 	static pathname(input) {
 		return url.parse(input).pathname;
 	}
+
+	/**
+	 * Парсит параметры пост запроса
+	 * Возвращает json параметр как объект
+	 * @param {any} body - тело POST запроса
+	 * @return {any}
+	 */
+	static parser(body) {
+		const { json, data } = body;
+		const payload = JSON.parse(json || data || {});
+		return payload;
+	}
+
+	/**
+	 * Проверяет есть ли в начале строки операторы сравнения
+	 * @param {string} input - строка для проверки
+	 */
+	static operatorsMatch(input) {
+		const pattern = /^([><=])([><=])?/;
+		const result = input.match(pattern);
+		return result;
+	}
+
+	/**
+	 * Выполняет операцию сравнения между числами
+	 * @param {number} value1
+	 * @param {string} operator
+	 * @param {number} value2
+	 */
+	static compare(value1, operator, value2) {
+		let result;
+		switch (operator) {
+		case '>': result = value1 > value2; break;
+		case '<': result = value1 < value2; break;
+		case '=': result = value1 === value2; break;
+		default: result = false;
+		}
+		return result;
+	}
+
+	/**
+	 * Пребразует в строку.
+	 * Удаляет все не цифры.
+	 * И возвращает как число.
+	 * @param {string} input - значение
+	 * @return {number}
+	 */
+	static toNumber(input) {
+		const strInput = input.toString();
+		const result = strInput.replace(/\D/g, '');
+		return Number(result);
+	}
+
+	/**
+	 * Возвращает переданную строку в нижнем регистре
+	 * Если передана не строка, то просто возвращает исходное значение.
+	 * @param {string | any} input - исходное значение
+	 */
+	static toLowerCase(input) {
+		const isString = this.typeOf(input) === 'string';
+		const isNumber = this.typeOf(input) === 'number';
+
+		if (isString) {
+			return input.toLowerCase();
+		}
+
+		if (isNumber) {
+			return String(input).toLowerCase();
+		}
+		return input;
+	}
 }
 
 module.exports = Helpers;
