@@ -276,7 +276,7 @@ vpbx.events(url); // => Realtime
 const app = require('express')();
 const bodyParser = require('body-parser');
 
-const VPBX = require('../index');
+const VPBX = require('mango-vpbx');
 
 const vpbx = new VPBX();
 
@@ -372,7 +372,7 @@ Realtime.hear(filter, handler); // => void
 const app = require('express')();
 const bodyParser = require('body-parser');
 
-const VPBX = require('../index');
+const VPBX = require('mango-vpbx');
 
 const vpbx = new VPBX();
 
