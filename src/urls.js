@@ -19,7 +19,19 @@ const suffix = {
 	dctUserHistory: 'queries/user_history_by_dct_number'
 };
 
+const realtime = {
+	call: 'events/call',
+	recording: 'events/recording',
+	dtmf: 'events/dtmf',
+	summary: 'events/summary',
+	sms: 'result/sms',
+	callback: 'result/callback',
+	stats: 'result/stat',
+	ping: 'ping'
+};
+
 module.exports = {
 	base,
-	suffix
+	suffix,
+	realtime
 };

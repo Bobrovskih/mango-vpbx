@@ -55,6 +55,17 @@ const vpbx = new VPBX(apiKey, apiSalt);
 
 ## Методы
 Список возможных json параметров их значений для вызова API методов доступен в [официальной документации](https://www.mango-office.ru/upload/api/MangoOffice_VPBX_API_v1.9.pdf)
+
+Вызов методов возвращает промис, результат которого объект, содержащий свойства:
+
+| Свойство  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| success  | boolean  |  результат |
+| result   | number   |  код ответа ВАТС  |
+| message  | string   |  сообщение  |
+
+
+
 ### метод call
 Инициирование вызова от имени сотрудника
 
@@ -247,12 +258,170 @@ vpbx.users(json); // => Promise<any>
 const { success, users } = await vpbx.users();
 ```
 
+## API RealTime
+API Realtime представляет собой набор запросов (уведомлений), которые направляются к внешней системе.
+
+### метод events
+Cоздает обработчики для прослушивания событий от ВАТС
+```js
+vpbx.events(url); // => Realtime
+```
+
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| url  | string   |  адрес внешней системы  |
+
+Пример использования
+```js
+const app = require('express')();
+const bodyParser = require('body-parser');
+
+const VPBX = require('mango-vpbx');
+
+const vpbx = new VPBX();
+
+const events = vpbx.events('http://example.com/mango-vpbx');
+
+app.use(bodyParser.urlencoded());
+
+app.use(events.call);
+app.use(events.summary);
+app.use(events.recording);
+app.use(events.dtmf);
+app.use(events.sms);
+app.use(events.ping);
+
+
+events.on('call', e => console.log('on events/call', e));
+events.on('summary', e => console.log('on events/summary', e));
+events.on('recording', e => console.log('on events/recording', e));
+events.on('dtmf', e => console.log('on events/dtmf', e));
+events.on('sms', e => console.log('on events/sms', e));
+events.on('ping', e => console.log('check connection', e));
+
+events.on('data', e => console.log('on any events', e));
+
+app.use((req, res) => res.status(404).send({ error: 'not found' }));
+app.listen(80);
+
+```
+
+## Класс Realtime
+Класс для создания обработчиков и получения уведомлений от ВАТС
+
+### метод call
+Обработчик "Уведомления о вызове"
+```js
+Realtime.call; // => Function
+```
+
+### метод sms
+Обработчик "Уведомления о результате смс"
+```js
+Realtime.sms; // => Function
+```
+
+### метод recording
+Обработчик "Уведомления о записи разговора"
+```js
+Realtime.recording; // => Function
+```
+
+### метод dtmf
+Обработчик "Уведомления о нажатиях DTMF клавиш"
+```js
+Realtime.dtmf; // => Function
+```
+
+### метод summary
+Обработчик "Уведомления о завершении вызова"
+```js
+Realtime.summary; // => Function
+```
+
+### метод ping
+Обработчик "Проверить подключение" из Личного кабинета
+```js
+Realtime.ping; // => Function
+```
+
+### метод all
+Обработчик всех событий (только для метода hear)
+```js
+Realtime.all; // => Function
+```
+
+### метод hear
+Слушает события по заданному фильтру
+```js
+Realtime.hear(filter, handler); // => void
+```
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| filter  | object  |  фильтр для событий  |
+| handler  | function   |  функция-обработчик  |
+
+Аргумент `filter` должен иметь обязательное свойство `event` - имя события 
+(возможные значения: 'call', 'recording', 'summary', 'dtmf', 'sms', 'callback', 'stats', 'ping')
+
+Функция `handler` в качестве первого аргумента принимает json-объект, содержащий параметры события (список передаваемых параметров доступен в [официальной документации](https://www.mango-office.ru/upload/api/MangoOffice_VPBX_API_v1.9.pdf))
+
+Пример использования
+```js
+
+const app = require('express')();
+const bodyParser = require('body-parser');
+
+const VPBX = require('mango-vpbx');
+
+const vpbx = new VPBX();
+
+const events = vpbx.events('http://example.com/mango-vpbx');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(events.all);
+
+events.hear({ event: 'ping' }, e => console.log('ping works!'));
+events.hear({ event: 'call' }, e => console.log('call event', e.location, e.call_state));
+
+app.use((req, res) => res.status(404).send({ error: 'not found' }));
+app.listen(80);
+
+```
+
+
+Обработчик "уведомления о завершении вызова" будет вызван только для исходящего звонка:
+```js
+events.hear({ event: 'summary', call_direction: '2' }, e => console.log('завершился исходящий звонок', e.entry_id));
+```
+
+Фильтр может состоять из нескольких параметров:
+```js
+events.hear({ event: 'recording', recording_state: 'Completed', completion_code: '1000' }, e => console.log('новая запись разговора!', e.recording_id));
+```
+
+В параметрах допускаются операторы сравнения:
+```js
+events.hear({ event: 'recording', completion_code: '>1000' }, e => console.log('ошибка сохранения записи разговора', e.recording_id, e.completion_code));
+```
+[Все примеры](examples/)
+
+
 ## Отладка
  Для логирования запросов необходимо задать переменную `process.env.DEBUG=mango-vpbx:worker`
- <br>
  Пример лога:
  ```
   mango-vpbx:worker <- POST https://app.mango-office.ru/vpbx/commands/callback +213ms
   mango-vpbx:worker {"vpbx_api_key":"2fn293fg43gfh02h4ub3jd23o312u4bc","sign":"394h39ufhi20jg5gj54j9ug2i0j20j3ig0edjbopeef3ojefrf0e3ie2fjojejf0","json":"{\"from\":{\"extension\":\"5000\",\"number\":\"74991102914\"},\"to_number\":\"74952129298\",\"command_id\":\"cmd-1516131681519\"}"} +1ms
   mango-vpbx:worker -> 200 OK +189ms
  ```
+   <br>Для логирования ивентов необходимо задать переменную `process.env.DEBUG=mango-vpbx:events`
+   <br>Пример лога:
+ ```
+ mango-vpbx:events -> POST /mango-vpbx/events/call +22ms
+ mango-vpbx:events -> POST /mango-vpbx/events/summary +18ms
+ mango-vpbx:events -> POST /mango-vpbx/ping +49ms
+ ```
+
+<br>Для логирования запросов и ивентов необходимо задать переменную `process.env.DEBUG=mango-vpbx:*`

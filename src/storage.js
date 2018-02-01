@@ -17,7 +17,7 @@ class Storage {
 				const writable = fs.createWriteStream(fullPath);
 				res.pipe(writable)
 					.on('finish', empty => resolve({ success: true, filename: fullPath }))
-					.on('error', error => reject({ success: false, message: error }));
+					.on('error', error => resolve({ success: false, message: error }));
 			});
 		});
 	}
