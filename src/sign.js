@@ -4,7 +4,6 @@ const crypto = require('crypto');
  * Класс для расчета значения sign
  */
 class Sign {
-
 	/**
 	 * Выполняет расчет sign и возвращает его.
 	 * @param {string} apiKey

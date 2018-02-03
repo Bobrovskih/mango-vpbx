@@ -258,6 +258,36 @@ vpbx.users(json); // => Promise<any>
 const { success, users } = await vpbx.users();
 ```
 
+### метод dctUserInfo
+Запрос информации о посетителе сайта по динамическому номеру
+
+```js
+vpbx.dctUserInfo(json); // => Promise<any>
+```
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| json  | object   |  параметры  |
+
+Пример использования
+```js
+const { success, dctUserInfo } = await vpbx.dctUserInfo(json);
+```
+
+### метод dctUserHistory
+Запрос истории навигации посетителя сайта по динамическому номеру
+
+```js
+vpbx.dctUserHistory(json); // => Promise<any>
+```
+| Аргумент  | Тип  | Описание|
+| ------------ | ------------ |------------ |
+| json  | object   |  параметры  |
+
+Пример использования
+```js
+const { success, dctUserHistory } = await vpbx.dctUserHistory(json);
+```
+
 ## API RealTime
 API Realtime представляет собой набор запросов (уведомлений), которые направляются к внешней системе.
 

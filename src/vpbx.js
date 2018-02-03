@@ -233,6 +233,7 @@ class VPBX {
 
 		const options = {
 			url: Helpers.url('dctUserInfo'),
+			transform: Transform.dctUserInfo,
 			formData
 		};
 
@@ -240,7 +241,7 @@ class VPBX {
 	}
 
 	/**
-	 * Запрос информации о посетителе сайта по динамическому номеру
+	 * Запрос истории навигации посетителя сайта по динамическому номеру
 	 * @param {json} - параметры
 	 * @return {Promise<any>}
 	 */
@@ -249,13 +250,14 @@ class VPBX {
 
 		const options = {
 			url: Helpers.url('dctUserHistory'),
+			transform: Transform.dctUserHistory,
 			formData
 		};
 
 		return new Worker(options);
 	}
 
-	/*
+	/**
 	 * создает обработчики для прослушивания событий от ВАТС
 	 * (API RealTime)
 	 * @param {string} url - адрес внешней системы
