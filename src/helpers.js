@@ -22,6 +22,7 @@ class Helpers {
 		let json = Helpers.filter(params, mask);
 		json = JSON.stringify(json);
 		const sign = Sign.calc(apiKey, apiSalt, json);
+		/* eslint camelcase: "off" */
 		const vpbx_api_key = apiKey;
 
 		return {

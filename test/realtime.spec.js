@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const Realtime = require('../src/realtime');
-const VPBX = require('../index');
+const VPBX = require('../');
 
 describe('метод Realtime.testFilter - базовые фильтры ', () => {
 	const vpbx = new VPBX();
@@ -106,7 +106,6 @@ describe('метод Realtime.testFilter - базовые фильтры ', () =
 	});
 });
 
-
 describe('метод Realtime.testFilter - операторы сравнения', () => {
 	const vpbx = new VPBX();
 	const events = vpbx.events('/mango-vpbx');
@@ -191,7 +190,7 @@ describe('метод Realtime.testFilter - событие summary', () => {
 	});
 });
 
-describe('метод Realtime.testFilter - regex в фильтре', () => {
+describe('метод Realtime.testFilter - рег.выражение в фильтре', () => {
 	const event = 'summary';
 	const vpbx = new VPBX();
 	const events = vpbx.events('/mango-vpbx');
@@ -229,5 +228,17 @@ describe('метод Realtime.testFilter - regex в фильтре', () => {
 		const filter = { call_direction: /[12]/ };
 		const result = events.testFilter(filter, json);
 		expect(result).equal(true);
+	});
+
+	it('номер линии - мобильный', () => {
+		const filter = { entry_result: 1, line_number: /^79/ };
+		const result = events.testFilter(filter, json);
+		expect(result).equal(false);
+	});
+
+	it('некорректный фильтр с regex', () => {
+		const filter = { callDirection: /1/ };
+		const result = events.testFilter(filter, json);
+		expect(result).equal(false);
 	});
 });

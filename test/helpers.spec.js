@@ -1,6 +1,5 @@
-const {
-	expect
-} = require('chai');
+const { expect } = require('chai');
+
 const Helpers = require('../src/helpers');
 const parameters = require('../src/parameters');
 
@@ -429,6 +428,7 @@ describe('метод Helpers.setCommandId', () => {
 		};
 
 		Helpers.setCommandId(source);
+		/* eslint no-unused-expressions: "off" */
 		expect(source.command_id).to.exist;
 	});
 

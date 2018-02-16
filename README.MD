@@ -435,8 +435,13 @@ events.hear({ event: 'recording', recording_state: 'Completed', completion_code:
 ```js
 events.hear({ event: 'recording', completion_code: '>1000' }, e => console.log('ошибка сохранения записи разговора', e.recording_id, e.completion_code));
 ```
-[Все примеры](examples/)
 
+И регулярные выражения:
+```js
+events.hear({ event: 'summary', call_direction: /[12]/ }, e => console.log('события завершения входящего/исходящего вызовов', e));
+```
+
+[Все примеры](examples/)
 
 ## Отладка
  Для логирования запросов необходимо задать переменную `process.env.DEBUG=mango-vpbx:worker`
