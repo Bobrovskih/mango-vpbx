@@ -456,7 +456,7 @@ describe('метод Helpers.toNumber', () => {
 		expect(result).equal(due);
 	});
 
-	it(`1010`, () => {
+	it('1010', () => {
 		const source = 1010;
 		const due = 1010;
 
@@ -542,7 +542,7 @@ describe('метод Helpers.compare', () => {
 describe('метод Helpers.operatorMatch', () => {
 	it('>=12421218', () => {
 		const source = '>=12421218';
-		const due = [ '>=', '>', '='];
+		const due = ['>=', '>', '='];
 
 		const result = Helpers.operatorsMatch(source);
 		expect(result).deep.equal(due);
@@ -550,7 +550,7 @@ describe('метод Helpers.operatorMatch', () => {
 
 	it('>12421218', () => {
 		const source = '>12421218';
-		const due = [ '>', '>' ];
+		const due = ['>', '>'];
 
 		const result = Helpers.operatorsMatch(source);
 		expect(result).deep.equal(due);
@@ -567,7 +567,6 @@ describe('метод Helpers.operatorMatch', () => {
 
 describe('метод Helpers.parser', () => {
 	it('случайные параметры ', () => {
-
 		const source = {
 			vpbx_api_key: 'woejf2i030dnjewoxnkwjfnlnfdslfsd',
 			sign: 'f2f8c654fa7ef2w2x2wd2d2gregef3cb602a4d5a24dc3dfefh2hf20eudh20dhw',

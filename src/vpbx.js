@@ -105,7 +105,9 @@ class VPBX {
 
 			do {
 				attempt += 1;
-				({ stats, code, success, message } = await new Worker(options));
+				({
+					stats, code, success, message
+				} = await new Worker(options));
 				await Helpers.sleep(5000);
 			} while (code === 204 && attempt < maxAttempt);
 

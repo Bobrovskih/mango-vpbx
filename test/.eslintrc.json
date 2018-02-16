@@ -9,6 +9,10 @@
             {
                 "skipBlankLines": true
             }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"            
         ]
     }
 }

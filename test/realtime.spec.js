@@ -1,6 +1,4 @@
-const {
-	expect
-} = require('chai');
+const { expect } = require('chai');
 const Realtime = require('../src/realtime');
 const VPBX = require('../index');
 
@@ -190,5 +188,46 @@ describe('метод Realtime.testFilter - событие summary', () => {
 		const filter = { call_direction: '2', talk_time: '>0' };
 		const result = events.testFilter(filter, json);
 		expect(result).equal(false);
+	});
+});
+
+describe('метод Realtime.testFilter - regex в фильтре', () => {
+	const event = 'summary';
+	const vpbx = new VPBX();
+	const events = vpbx.events('/mango-vpbx');
+	const json = {
+		entry_id: 'MzUyODMzNzg4OTo0MDE=',
+		call_direction: 1,
+		from: {
+			extension: '360',
+			number: 'sip:example@domain.mangosip.ru'
+		},
+		to: {
+			number: '74995013402'
+		},
+		line_number: '74991102914',
+		create_time: 1516454940,
+		forward_time: 1516454940,
+		talk_time: 1516454940,
+		end_time: 1516454946,
+		entry_result: 1,
+		disconnect_reason: 1110
+	};
+	it('только коды завершения 1ххх', () => {
+		const filter = { disconnect_reason: /^1\d{3}$/ };
+		const result = events.testFilter(filter, json);
+		expect(result).equal(true);
+	});
+
+	it('номер линии московский', () => {
+		const filter = { line_number: /^749[59].*$/ };
+		const result = events.testFilter(filter, json);
+		expect(result).equal(true);
+	});
+
+	it('только входящие/исходящие event summary', () => {
+		const filter = { call_direction: /[12]/ };
+		const result = events.testFilter(filter, json);
+		expect(result).equal(true);
 	});
 });

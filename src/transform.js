@@ -10,7 +10,7 @@ class Transform {
 	 * @param {any} res - readable объект из request-promise
 	 */
 	static
-	default (body, res) {
+	default(body, res) {
 		let temp;
 		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 200) {

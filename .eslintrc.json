@@ -25,7 +25,7 @@
         ],
         "linebreak-style": [
             "error",
-            "windows"
+            "unix"
         ],
         "no-trailing-spaces": [
             2,

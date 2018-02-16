@@ -1,10 +1,12 @@
 {
   "name": "mango-vpbx",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "NodeJS SDK for API VPBX by MANGO OFFICE",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "lint": "eslint --ext .js examples/ src/ test/",
+    "lint-fix": "eslint --ext .js examples/ src/ test/ --fix"
   },
   "engines": {
     "node": ">=8"
