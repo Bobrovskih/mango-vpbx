@@ -211,8 +211,11 @@ class VPBX {
 
 	/**
 	 * Запрос для включения записи разговора
-	 * @param {json} - параметры
-	 * @return {Promise<any>}
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] идентификатор команды
+	 * @param {string} json.call_id идентификатор вызова
+	 * @param {string} json.call_party_number номер абонента участвующего в вызове,
+	 * которого нужно начать записывать.
 	 */
 	recordingStart(json) {
 		Helpers.setCommandId(json);
