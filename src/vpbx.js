@@ -20,7 +20,13 @@ class VPBX {
 
 	/**
 	 * Выполняет запрос на звонок
-	 * @param {any} json - json параметры
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] id команды
+	 * @param {object} json.from инициатор вызова
+	 * @param {string} json.from.extension добавочный номер сотрудника
+	 * @param {string} [json.from.number] номер телефона
+	 * @param {string} json.to_number вызываемый номер телефона
+	 * @param {string} [json.line_number] номер линии (АОН)
 	 */
 	call(json) {
 		Helpers.setCommandId(json);
