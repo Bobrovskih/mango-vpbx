@@ -65,7 +65,8 @@ class VPBX {
 	/**
 	 * Выполняет запрос сотрудников.
 	 * Без параметров вернет всех сотрудников.
-	 * @param {any=} json - параметры
+	 * @param {object} [json] параметры
+	 * @param {string} [json.extension] добавочный номер сотрудника
 	 */
 	users(json = {}) {
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'users');
