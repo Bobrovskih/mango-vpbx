@@ -10,8 +10,9 @@ const Realtime = require('./realtime');
 class VPBX {
 	/**
 	 *
-	 * @param {string} apiKey - Уникальный код вашей АТС
-	 * @param {string} apiSalt - Ключ для создания подписи
+	 * @constructor
+	 * @param {string} [apiKey] Уникальный код вашей АТС
+	 * @param {string} [apiSalt] Ключ для создания подписи
 	 */
 	constructor(apiKey = process.env.API_KEY, apiSalt = process.env.API_SALT) {
 		this.apiKey = apiKey;
@@ -27,6 +28,7 @@ class VPBX {
 	 * @param {string} [json.from.number] номер телефона
 	 * @param {string} json.to_number вызываемый номер телефона
 	 * @param {string} [json.line_number] номер линии (АОН)
+	 * @return {Promise<any>}
 	 */
 	call(json) {
 		Helpers.setCommandId(json);
@@ -48,6 +50,7 @@ class VPBX {
 	 * @param {string} json.from добавочный номер группы
 	 * @param {string} json.to вызываемый номер телефона
 	 * @param {string} [json.line_number] номер линии (АОН)
+	 * @return {Promise<any>}
 	 */
 	callGroup(json) {
 		Helpers.setCommandId(json);
@@ -67,6 +70,7 @@ class VPBX {
 	 * Без параметров вернет всех сотрудников.
 	 * @param {object} [json] параметры
 	 * @param {string} [json.extension] добавочный номер сотрудника
+	 * @return {Promise<any>}
 	 */
 	users(json = {}) {
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'users');
@@ -99,7 +103,7 @@ class VPBX {
 	 *
 	 * @param {string} [request_id] идентификатор запроса
 	 *
-	 * @return {Promise<string[][]>}
+	 * @return {Promise<any>}
 	 * @async
 	 */
 	async stats(json) {
@@ -154,6 +158,7 @@ class VPBX {
 	 * @param {string} json.from_extension внутренний номер сотрудника
 	 * @param {string} json.to_number номер вызываемого телефона
 	 * @param {string} [json.sms_sender] имя отправителя
+	 * @return {Promise<any>}
 	 */
 	sms(json) {
 		Helpers.setCommandId(json);
@@ -216,6 +221,7 @@ class VPBX {
 	 * @param {string} json.call_id идентификатор вызова
 	 * @param {string} json.call_party_number номер абонента участвующего в вызове,
 	 * которого нужно начать записывать.
+	 * @return {Promise<any>}
 	 */
 	recordingStart(json) {
 		Helpers.setCommandId(json);
@@ -232,7 +238,10 @@ class VPBX {
 
 	/**
 	 * Запрос для маршрутизации вызова
-	 * @param {json} - параметры
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] идентификатор команды
+	 * @param {string} json.call_id идентификатор вызова
+	 * @param {string} json.to_number новый номер назначения вызова
 	 * @return {Promise<any>}
 	 */
 	route(json) {
