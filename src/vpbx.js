@@ -281,7 +281,8 @@ class VPBX {
 
 	/**
 	 * Запрос информации о посетителе сайта по динамическому номеру
-	 * @param {json} - параметры
+	 * @param {object} json параметры
+	 * @param {string} json.number динамический номер
 	 * @return {Promise<any>}
 	 */
 	dctUserInfo(json) {
