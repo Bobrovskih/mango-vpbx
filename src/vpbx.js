@@ -299,7 +299,8 @@ class VPBX {
 
 	/**
 	 * Запрос истории навигации посетителя сайта по динамическому номеру
-	 * @param {json} - параметры
+	 * @param {object} json параметры
+	 * @param {string} json.number динамический номер
 	 * @return {Promise<any>}
 	 */
 	dctUserHistory(json) {
