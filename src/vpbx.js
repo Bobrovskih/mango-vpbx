@@ -258,7 +258,13 @@ class VPBX {
 
 	/**
 	 * Запрос для перевода вызова
-	 * @param {json} - параметры
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] идентификатор команды
+	 * @param {string} json.call_id идентификатор вызова
+	 * @param {string} json.method тип перевода: blind - слепой, hold - консультативный
+	 * @param {string} json.to_number номер (цель) перевода
+	 * @param {string} json.initiator участник разговора, от имени которого выполняется перевод
+	 * (например, "from.extension", "from.number", "to.extension", "to.number")
 	 * @return {Promise<any>}
 	 */
 	transfer(json) {
