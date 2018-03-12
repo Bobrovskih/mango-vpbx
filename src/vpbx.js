@@ -43,7 +43,11 @@ class VPBX {
 
 	/**
 	 * Выполняет запрос на групповой звонок
-	 * @param {any} json - параметры
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] id команды
+	 * @param {string} json.from добавочный номер группы
+	 * @param {string} json.to вызываемый номер телефона
+	 * @param {string} [json.line_number] номер линии (АОН)
 	 */
 	callGroup(json) {
 		Helpers.setCommandId(json);
