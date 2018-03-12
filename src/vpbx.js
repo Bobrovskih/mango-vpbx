@@ -170,7 +170,9 @@ class VPBX {
 
 	/**
 	 * Выполняет запрос на получение записи разговора
-	 * @param {any} json - параметры
+	 * @param {object} json параметры
+	 * @param {string} json.recording_id идентификатор записи разговора
+	 * @param {string} json.folder абсолютный путь до папки, для сохранения записи разговора
 	 * @async
 	 */
 	async recording(json) {
