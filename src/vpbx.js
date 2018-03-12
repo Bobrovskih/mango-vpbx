@@ -21,7 +21,7 @@ class VPBX {
 	/**
 	 * Выполняет запрос на звонок
 	 * @param {object} json параметры
-	 * @param {string} [json.command_id] id команды
+	 * @param {string} [json.command_id] идентификатор запроса
 	 * @param {object} json.from инициатор вызова
 	 * @param {string} json.from.extension добавочный номер сотрудника
 	 * @param {string} [json.from.number] номер телефона
@@ -44,7 +44,7 @@ class VPBX {
 	/**
 	 * Выполняет запрос на групповой звонок
 	 * @param {object} json параметры
-	 * @param {string} [json.command_id] id команды
+	 * @param {string} [json.command_id] идентификатор запроса
 	 * @param {string} json.from добавочный номер группы
 	 * @param {string} json.to вызываемый номер телефона
 	 * @param {string} [json.line_number] номер линии (АОН)
@@ -82,8 +82,27 @@ class VPBX {
 
 	/**
 	 * Выполняет запрос статистики
-	 * @param {any=} json - параметры
-	 * @return {Promise<string>}
+	 * @param {object} json параметры
+	 * @param {string} json.date_from timestamp начала
+	 * @param {string} json.date_to timestamp конца
+	 * @param {string} [json.fields] какие поля нужно отгружать
+	 * 
+	 * @param {object} [json.from] данные, относящиеся к вызывающему абоненту
+	 * @param {string} [json.from.extension] добавочный номер
+	 * @param {string} [json.from.number] номер телефона
+	 * 
+	 * @param {object} [json.to] данные, относящиеся к вызываемому абоненту
+	 * @param {string} [json.to.extension] добавочный номер
+	 * @param {string} [json.to.number] номер телефона
+	 * 
+	 * @param {object} [json.call_party] данные, относящиеся к вызываемому или вызывающему абоненту.
+	 * Использование поля допустимо только без заполнения полей to и from
+	 * @param {string} [json.call_party.extension] добавочный номер
+	 * @param {string} [json.call_party.number] номер телефона
+	 * 
+	 * @param {string} [request_id] идентификатор запроса
+	 * 
+	 * @return {Promise<string[][]>}
 	 * @async
 	 */
 	async stats(json) {
