@@ -9,8 +9,7 @@ class Transform {
 	 * @param {any} body - тело ответа из request-promise
 	 * @param {any} res - readable объект из request-promise
 	 */
-	static
-	default(body, res) {
+	static default(body, res) {
 		let temp;
 		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 200) {

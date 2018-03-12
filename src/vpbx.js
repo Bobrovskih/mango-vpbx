@@ -20,6 +20,12 @@ class VPBX {
 	}
 
 	/**
+	 * @typedef Output результат вызова методов
+	 * @property {boolean} success
+	 * @property {number} code
+	 * @property {string} message
+	 */
+	/**
 	 * Выполняет запрос на звонок
 	 * @param {object} json параметры
 	 * @param {string} [json.command_id] идентификатор запроса
@@ -28,7 +34,7 @@ class VPBX {
 	 * @param {string} [json.from.number] номер телефона
 	 * @param {string} json.to_number вызываемый номер телефона
 	 * @param {string} [json.line_number] номер линии (АОН)
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	call(json) {
 		Helpers.setCommandId(json);
@@ -50,7 +56,7 @@ class VPBX {
 	 * @param {string} json.from добавочный номер группы
 	 * @param {string} json.to вызываемый номер телефона
 	 * @param {string} [json.line_number] номер линии (АОН)
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	callGroup(json) {
 		Helpers.setCommandId(json);
@@ -70,7 +76,7 @@ class VPBX {
 	 * Без параметров вернет всех сотрудников.
 	 * @param {object} [json] параметры
 	 * @param {string} [json.extension] добавочный номер сотрудника
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, message: string, users: any[] }>}
 	 */
 	users(json = {}) {
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'users');
@@ -101,9 +107,9 @@ class VPBX {
 	 * @param {string} [json.call_party.extension] добавочный номер
 	 * @param {string} [json.call_party.number] номер телефона
 	 *
-	 * @param {string} [request_id] идентификатор запроса
+	 * @param {string} [json.request_id] идентификатор запроса
 	 *
-	 * @return {Promise<any>}
+	 * @return {Promise<{ stats: string[][], success: boolean, message: string }>}
 	 * @async
 	 */
 	async stats(json) {
@@ -158,7 +164,7 @@ class VPBX {
 	 * @param {string} json.from_extension внутренний номер сотрудника
 	 * @param {string} json.to_number номер вызываемого телефона
 	 * @param {string} [json.sms_sender] имя отправителя
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	sms(json) {
 		Helpers.setCommandId(json);
@@ -178,6 +184,7 @@ class VPBX {
 	 * @param {object} json параметры
 	 * @param {string} json.recording_id идентификатор записи разговора
 	 * @param {string} json.folder абсолютный путь до папки, для сохранения записи разговора
+	 * @return {Promise<{success: boolean, file: string}>}
 	 * @async
 	 */
 	async recording(json) {
@@ -200,7 +207,7 @@ class VPBX {
 	 * @param {object} json параметры
 	 * @param {string} [json.command_id] идентификатор команды
 	 * @param {string} json.call_id идентификатор вызова, который необходимо завершить
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	hangup(json) {
 		Helpers.setCommandId(json);
@@ -221,7 +228,7 @@ class VPBX {
 	 * @param {string} json.call_id идентификатор вызова
 	 * @param {string} json.call_party_number номер абонента участвующего в вызове,
 	 * которого нужно начать записывать.
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	recordingStart(json) {
 		Helpers.setCommandId(json);
@@ -242,7 +249,7 @@ class VPBX {
 	 * @param {string} [json.command_id] идентификатор команды
 	 * @param {string} json.call_id идентификатор вызова
 	 * @param {string} json.to_number новый номер назначения вызова
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	route(json) {
 		Helpers.setCommandId(json);
@@ -265,7 +272,7 @@ class VPBX {
 	 * @param {string} json.to_number номер (цель) перевода
 	 * @param {string} json.initiator участник разговора, от имени которого выполняется перевод
 	 * (например, "from.extension", "from.number", "to.extension", "to.number")
-	 * @return {Promise<any>}
+	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	transfer(json) {
 		Helpers.setCommandId(json);
@@ -283,7 +290,7 @@ class VPBX {
 	 * Запрос информации о посетителе сайта по динамическому номеру
 	 * @param {object} json параметры
 	 * @param {string} json.number динамический номер
-	 * @return {Promise<any>}
+	 * @return {Promise<{success: boolean, code: number, dctUserInfo: any[]}>}
 	 */
 	dctUserInfo(json) {
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'dctUserInfo');
@@ -301,7 +308,7 @@ class VPBX {
 	 * Запрос истории навигации посетителя сайта по динамическому номеру
 	 * @param {object} json параметры
 	 * @param {string} json.number динамический номер
-	 * @return {Promise<any>}
+	 * @return {Promise<{success: boolean, code: number, dctUserHistory: any[]}>}
 	 */
 	dctUserHistory(json) {
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'dctUserHistory');
