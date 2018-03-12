@@ -318,7 +318,7 @@ class VPBX {
 	/**
 	 * создает обработчики для прослушивания событий от ВАТС
 	 * (API RealTime)
-	 * @param {string} url - адрес внешней системы
+	 * @param {string} url адрес внешней системы
 	 */
 	events(url) {
 		return new Realtime(url);
