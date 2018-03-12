@@ -192,7 +192,9 @@ class VPBX {
 
 	/**
 	 * Выполняет запрос для завершения вызова
-	 * @param {json} - параметры
+	 * @param {object} json параметры
+	 * @param {string} [json.command_id] идентификатор команды
+	 * @param {string} json.call_id идентификатор вызова, который необходимо завершить
 	 * @return {Promise<any>}
 	 */
 	hangup(json) {
