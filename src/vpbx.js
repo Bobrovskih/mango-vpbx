@@ -160,7 +160,7 @@ class VPBX {
 	 * Выполняет запрос на отправку смс
 	 * @param {object} json параметры
 	 * @param {string} [json.command_id] идентификатор команды
-	 * @param {string} [json.text] текст сообщения
+	 * @param {string} json.text текст сообщения
 	 * @param {string} json.from_extension внутренний номер сотрудника
 	 * @param {string} json.to_number номер вызываемого телефона
 	 * @param {string} [json.sms_sender] имя отправителя

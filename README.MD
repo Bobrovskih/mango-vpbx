@@ -147,7 +147,7 @@ vpbx.sms(json); // => Promise<any>
 | --------- | ---- | -------- |
 | json | <code>object</code> | параметры |
 | [json.command_id] | <code>string</code> | идентификатор команды |
-| [json.text] | <code>string</code> | текст сообщения |
+| json.text | <code>string</code> | текст сообщения |
 | json.from_extension | <code>string</code> | внутренний номер сотрудника |
 | json.to_number | <code>string</code> | номер вызываемого телефона |
 | [json.sms_sender] | <code>string</code> | имя отправителя |
@@ -315,6 +315,7 @@ vpbx.dctUserInfo(json); // => Promise<any>
 
 Пример использования
 ```js
+const json = { number: '74952129298' };
 const { success, dctUserInfo } = await vpbx.dctUserInfo(json);
 ```
 
@@ -331,6 +332,7 @@ vpbx.dctUserHistory(json); // => Promise<any>
 
 Пример использования
 ```js
+const json = { number: '74952129298' };
 const { success, dctUserHistory } = await vpbx.dctUserHistory(json);
 ```
 
