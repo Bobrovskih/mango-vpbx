@@ -103,7 +103,7 @@ class Realtime extends EventEmitter {
 	createAll() {
 		let all = Object.entries(realtime).map(item => item[1]).join('|');
 		all = `(${all})`;
-		const pattern = new RegExp(all, 'ig');
+		const pattern = new RegExp(all, 'i');
 		return (req, res, next) => {
 			if (pattern.test(req.path)) {
 				debug(`-> ${req.method} ${req.url}`);
