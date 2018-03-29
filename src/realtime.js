@@ -76,14 +76,14 @@ class Realtime extends EventEmitter {
 
 	/**
 	 * Создает обработчик
-	 * @param {string} en - имя ивента
+	 * @param {string} en имя ивента
 	 * @return {Function}
 	 */
 	create(en) {
 		const pattern = new RegExp(`${realtime[en]}/?$`, 'i');
 		return (req, res, next) => {
 			if (pattern.test(req.path)) {
-				debug(`-> ${req.method} ${req.url}`);
+				this.debug(req);
 				const payload = Helpers.parser(req.body);
 				this.emit('data', payload);
 				this.emit(en, payload);
@@ -103,10 +103,10 @@ class Realtime extends EventEmitter {
 	createAll() {
 		let all = Object.entries(realtime).map(item => item[1]).join('|');
 		all = `(${all})`;
-		const pattern = new RegExp(all, 'ig');
+		const pattern = new RegExp(all, 'i');
 		return (req, res, next) => {
 			if (pattern.test(req.path)) {
-				debug(`-> ${req.method} ${req.url}`);
+				this.debug(req);
 				const eventName = req.path.replace(/.*\//g, '').trim();
 				const payload = Helpers.parser(req.body);
 				this.invokeHear(eventName, payload);
@@ -119,10 +119,11 @@ class Realtime extends EventEmitter {
 			next();
 		};
 	}
+
 	/**
 	 * Слушает события по фильтрам
-	 * @param {any} filter - фильтр событий
-	 * @param {Function} handler - функция обработчик
+	 * @param {any} filter фильтр событий
+	 * @param {(e) => } handler функция обработчик
 	 */
 	hear(filter, handler) {
 		const newHear = {
@@ -135,8 +136,8 @@ class Realtime extends EventEmitter {
 
 	/**
 	 * Проверяет и вызывает обработчики hear
-	 * @param {string} name - имя ивента
-	 * @param {any} json - параметры
+	 * @param {string} name имя ивента
+	 * @param {any} json параметры
 	 */
 	invokeHear(name, json) {
 		this.poolHear
@@ -154,9 +155,9 @@ class Realtime extends EventEmitter {
 
 	/**
 	 * Проверяет подходит ли фильтр под параметры
-	 * @param {string} event - имя ивента
-	 * @param {any} filter - фильтр
-	 * @param {any} json - параметры
+	 * @param {string} event имя ивента
+	 * @param {any} filter фильтр
+	 * @param {any} json параметры
 	 * @return {boolean}
 	 */
 	testFilter(filter, json) {
@@ -169,14 +170,22 @@ class Realtime extends EventEmitter {
 		}
 
 		for (const key in filter) {
-			if (!filter[key]) continue;
 			if (key === 'event') continue;
+			const value = filter[key];
 
-			if (Helpers.typeOf(filter[key]) === 'regexp') {
-				return filter[key].test(json[key]);
+			if (Helpers.typeOf(value) === 'regexp') {
+				const result = value.test(json[key]);
+				if (!result) return false;
+				continue;
 			}
 
-			const filterVal = Helpers.toLowerCase(filter[key]);
+			if (Helpers.typeOf(value) === 'object') {
+				const result = this.testFilter(value, json[key]);
+				if (!result) return false;
+				continue;
+			}
+
+			const filterVal = Helpers.toLowerCase(value);
 			const jsonVal = Helpers.toLowerCase(json[key]);
 
 			const operators = Helpers.operatorsMatch(filterVal);
@@ -192,6 +201,14 @@ class Realtime extends EventEmitter {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Логирует ивент
+	 * @param {any} req экземпляр запроса express
+	 */
+	debug(req) {
+		debug(`-> ${req.method} ${req.url} ${JSON.stringify(req.body)}`);
 	}
 }
 
