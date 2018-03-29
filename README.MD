@@ -501,9 +501,7 @@ events.hear({ event: 'summary', call_direction: /[12]/ }, e => console.log('со
    Пример лога:
 
  ```
- mango-vpbx:events -> POST /mango-vpbx/events/call +22ms
- mango-vpbx:events -> POST /mango-vpbx/events/summary +18ms
- mango-vpbx:events -> POST /mango-vpbx/ping +49ms
+mango-vpbx:events -> POST /events/call {"vpbx_api_key":"2fn293fg43gfh02h4ub3jd23o312u4bc","sign":"394h39ufhi20jg5gj54j9ug2i0j20j3ig0edjbopeef3ojefrf0e3ie2fjojejf0","json":"{\"entry_id\":\"MzUyODbvczg4OTo0MDE=\",\"call_id\":\"MzUyODbvczg4OTo0MDEMzUyODbvczg4O\",\"timestamp\":1522347638,\"seq\":1,\"call_state\":\"Appeared\",\"location\":\"abonent\",\"from\":{\"number\":\"74991102914\",\"taken_from_call_id\":\"MzUyODbvczg4OMzUyODbvczg4OMzUyODbvcg\"},\"to\":{\"extension\":\"101\",\"number\":\"sip:example@domain.mangosip.ru\",\"line_number\":\"74952129298\",\"acd_group\":\"22\"},\"dct\":{\"type\":0}}"} +0ms
  ```
 
 
