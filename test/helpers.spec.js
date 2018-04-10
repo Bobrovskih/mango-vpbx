@@ -397,6 +397,14 @@ describe('метод Helpers.url', () => {
 		const result = Helpers.url(source);
 		expect(result).equal(due);
 	});
+
+	it('hangup', () => {
+		const source = 'hangup';
+		const due = 'https://app.mango-office.ru/vpbx/commands/call/hangup';
+
+		const result = Helpers.url(source);
+		expect(result).equal(due);
+	});
 });
 
 describe('метод Helpers.createForm', () => {
