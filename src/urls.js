@@ -6,7 +6,7 @@ const base = 'https://app.mango-office.ru/vpbx/';
 const suffix = {
 	call: 'commands/callback',
 	callGroup: 'commands/callback_group',
-	callHangup: 'commands/call/hangup',
+	hangup: 'commands/call/hangup',
 	route: 'commands/route',
 	transfer: 'commands/transfer',
 	users: 'config/users/request',
