@@ -5,7 +5,10 @@ const call = {
 		number: 1
 	},
 	to_number: 1,
-	line_number: 1
+	line_number: 1,
+	sip_headers: {
+		'Call-Info/answer-after': 1,
+	},
 };
 
 const callGroup = {
@@ -23,7 +26,10 @@ const hangup = {
 const route = {
 	command_id: 1,
 	call_id: 1,
-	to_number: 1
+	to_number: 1,
+	sip_headers: {
+		'From/display-name': 1,
+	},
 };
 
 const transfer = {

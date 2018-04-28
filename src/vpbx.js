@@ -20,25 +20,21 @@ class VPBX {
 	}
 
 	/**
-	 * @typedef Output результат вызова методов
-	 * @property {boolean} success
-	 * @property {number} code
-	 * @property {string} message
-	 */
-	/**
 	 * Выполняет запрос на звонок
 	 * @param {object} json параметры
-	 * @param {string} [json.command_id] идентификатор запроса
 	 * @param {object} json.from инициатор вызова
 	 * @param {string} json.from.extension добавочный номер сотрудника
 	 * @param {string} [json.from.number] номер телефона
 	 * @param {string} json.to_number вызываемый номер телефона
+	 * @param {string} [json.command_id] идентификатор запроса
 	 * @param {string} [json.line_number] номер линии (АОН)
+	 * @param {object} [json.sip_headers] SIP заголовки
+	 * @param {string} [json.sip_headers.answer_after]
 	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	call(json) {
 		Helpers.setCommandId(json);
-
+		Helpers.mapSipHeaders(json);
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'call');
 
 		const options = {
@@ -246,13 +242,16 @@ class VPBX {
 	/**
 	 * Запрос для маршрутизации вызова
 	 * @param {object} json параметры
-	 * @param {string} [json.command_id] идентификатор команды
 	 * @param {string} json.call_id идентификатор вызова
 	 * @param {string} json.to_number новый номер назначения вызова
+	 * @param {string} [json.command_id] идентификатор команды
+	 * @param {object} [json.sip_headers] SIP заголовки
+	 * @param {string} [json.sip_headers.display_name]
 	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	route(json) {
 		Helpers.setCommandId(json);
+		Helpers.mapSipHeaders(json);
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'route');
 
 		const options = {

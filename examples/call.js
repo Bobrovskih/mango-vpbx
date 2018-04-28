@@ -53,6 +53,16 @@ async function main() {
 		const { success } = await vpbx.call(json);
 		console.log(success);
 	}
+
+	{
+		const json = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+			sip_headers: { answer_after: '5' }
+		};
+		const { success } = await vpbx.call(json);
+		console.log(success);
+	}
 }
 
 main();

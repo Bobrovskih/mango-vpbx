@@ -204,6 +204,49 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
+
+	it('route + sip_headers', () => {
+		const json = {
+			call_id: 'NyAoNDk1KSAyMTItOTItOTgJ',
+			to_number: '101',
+			sip_headers: {
+				display_name: 'Ded Moroz',
+				'From/display-name': 'Ded Moroz',
+			},
+		};
+		const due = {
+			call_id: 'NyAoNDk1KSAyMTItOTItOTgJ',
+			to_number: '101',
+			sip_headers: {
+				'From/display-name': 'Ded Moroz',
+			},
+		};
+
+		const result = Helpers.filter(json, parameters.route);
+		expect(result).deep.equal(due);
+	});
+
+	it('callback + sip_headers', () => {
+		const json = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+			sip_headers: {
+				answer_after: '5',
+				'Call-Info/answer-after': '5',
+			},
+		};
+
+		const due = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+			sip_headers: {
+				'Call-Info/answer-after': '5',
+			},
+		};
+
+		const result = Helpers.filter(json, parameters.call);
+		expect(result).deep.equal(due);
+	});
 });
 
 
@@ -599,5 +642,58 @@ describe('метод Helpers.fixStatResult', () => {
 
 		const result = Helpers.fixStatResult(source);
 		expect(source).deep.equal(due);
+	});
+});
+
+describe('метод Helpers.mapSipHeaders', () => {
+	it('answer_after => Call-Info/answer-after', () => {
+		const json = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+			sip_headers: { answer_after: '5' },
+		};
+		Helpers.mapSipHeaders(json);
+		const due = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+			sip_headers: {
+				answer_after: '5',
+				'Call-Info/answer-after': '5',
+			},
+		};
+		expect(json).deep.equal(due);
+	});
+
+	it('not modified', () => {
+		const json = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+		};
+		Helpers.mapSipHeaders(json);
+		const due = {
+			from: { extension: '101' },
+			to_number: '74952129298',
+		};
+		expect(json).deep.equal(due);
+	});
+
+	it('display_name => From/display-name', () => {
+		const json = {
+			call_id: 'NyAoNDk1KSAyMTItOTItOTgJ',
+			to_number: '101',
+			sip_headers: {
+				display_name: 'Santa Claus',
+			},
+		};
+		const due = {
+			call_id: 'NyAoNDk1KSAyMTItOTItOTgJ',
+			to_number: '101',
+			sip_headers: {
+				display_name: 'Santa Claus',
+				'From/display-name': 'Santa Claus',
+			},
+		};
+		Helpers.mapSipHeaders(json);
+		expect(json).deep.equal(due);
 	});
 });

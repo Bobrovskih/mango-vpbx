@@ -264,6 +264,22 @@ class Helpers {
 			filter.event = 'stat';
 		}
 	}
+
+	/**
+	 * Преобразует сип заголовки
+	 * @param {any} json параметры
+	 */
+	static mapSipHeaders(json) {
+		if (json.sip_headers) {
+			if (json.sip_headers.answer_after) {
+				json.sip_headers['Call-Info/answer-after'] = json.sip_headers.answer_after;
+			}
+
+			if (json.sip_headers.display_name) {
+				json.sip_headers['From/display-name'] = json.sip_headers.display_name;
+			}
+		}
+	}
 }
 
 module.exports = Helpers;

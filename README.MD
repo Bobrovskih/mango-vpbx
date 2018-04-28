@@ -81,6 +81,8 @@ vpbx.call(json); // => Promise<any>
 | [json.from.number] | <code>string</code> | номер телефона |
 | json.to_number | <code>string</code> | вызываемый номер телефона |
 | [json.line_number] | <code>string</code> | номер линии (АОН) |
+| [json.sip_headers] | <code>object</code> | заголовки SIP |
+| [json.sip_headers.answer_after] | <code>string</code> | автоответ через n секунд |
 
 Пример использования
 ```js
@@ -196,6 +198,8 @@ vpbx.route(json); // => Promise<any>
 | [json.command_id] | <code>string</code> | идентификатор команды |
 | json.call_id | <code>string</code> | идентификатор вызова |
 | json.to_number | <code>string</code> | новый номер назначения вызова |
+| [json.sip_headers] | <code>object</code> | заголовки SIP |
+| [json.sip_headers.display_name] | <code>string</code> | отображаемое имя |
 
 Пример использования
 ```js
