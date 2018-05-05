@@ -184,18 +184,13 @@ class VPBX {
 	 * @async
 	 */
 	async recording(json) {
-		Helpers.setAction(json);
-		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'recording');
-
-		const options = {
-			url: Helpers.url('recording'),
-			formData,
-			transform: Transform.recording
-		};
-
-		const { tempLink } = await new Worker(options);
-		const file = await Storage.downloadFile(tempLink, json.folder);
-		return { success: true, file };
+		if (json.folder) {
+			return await this.recordingPost(json);
+		}
+		if (json.expires) {
+			return await this.recordingLink(json);
+		}
+		return { success: false };
 	}
 
 	/**
@@ -328,6 +323,32 @@ class VPBX {
 	 */
 	events(url) {
 		return new Realtime(url);
+	}
+
+	async recordingPost(json) {
+		Helpers.setAction(json);
+		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'recordingPost');
+
+		const options = {
+			url: Helpers.url('recordingPost'),
+			formData,
+			transform: Transform.recordingPost
+		};
+
+		const { tempLink } = await new Worker(options);
+		const file = await Storage.downloadFile(tempLink, json.folder);
+		return { success: true, file };
+	}
+
+	async recordingLink(json) {
+		const url = Helpers.createRecordingLink(json);
+		const options = {
+			method: 'GET',
+			url,
+			transform: Transform.recordingLink,
+		};
+		const { link } = await new Worker(options);
+		return { success: true, link };
 	}
 }
 

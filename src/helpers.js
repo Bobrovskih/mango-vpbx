@@ -280,6 +280,11 @@ class Helpers {
 			}
 		}
 	}
+
+	static createRecordingLink(json) {
+		json.action = json.action || 'play';
+		const sign = Sign.calcRecordingLink();
+	}
 }
 
 module.exports = Helpers;

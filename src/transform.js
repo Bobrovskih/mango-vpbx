@@ -79,7 +79,7 @@ class Transform {
 	 * @param {any} body - тело от request-promise
 	 * @param {any} res - res объект от request-promise
 	 */
-	static recording(body, res) {
+	static recordingPost(body, res) {
 		debug(`-> ${res.statusCode} ${res.statusMessage}`);
 		if (res.statusCode === 302) {
 			return {

@@ -75,7 +75,7 @@ const users = {
 	extension: 1
 };
 
-const recording = {
+const recordingPost = {
 	action: 1,
 	recording_id: 1
 };
@@ -103,7 +103,7 @@ module.exports = {
 	users,
 	statsRequest,
 	statsResult,
-	recording,
+	recordingPost,
 	recordingStart,
 	sms,
 	dctUserInfo,
