@@ -127,10 +127,26 @@ class Helpers {
 
 	/**
 	 * Устанавливает action:download по умолчанию
-	 * @param {any} json - параметры
+	 * @param {any} json параметры
 	 */
-	static setAction(json) {
-		json.action = json.action || 'download';
+	static setAction(json, action = 'download') {
+		json.action = json.action || action;
+	}
+
+	/**
+	 * Преобразует/устанавливает expires в timestamp
+	 * @param {any} json параметры
+	 */
+	static mapExpires(json) {
+		const value = json.expires;
+		if (value === 'MAX') {
+			const dt = new Date();
+			dt.setFullYear(dt.getFullYear() + 1000);
+			json.expires = Math.floor(+dt / 1000);
+			return;
+		}
+		const dt = new Date(value);
+		json.expires = Math.floor(+dt / 1000);
 	}
 
 	/**
@@ -281,9 +297,23 @@ class Helpers {
 		}
 	}
 
-	static createRecordingLink(json) {
-		json.action = json.action || 'play';
-		const sign = Sign.calcRecordingLink();
+	/**
+	 * Создает урл для GET запроса (команды)
+	 * @param {string} apiKey ключ
+	 * @param {string} apiSalt соль
+	 * @param {any} json параметры
+	 * @param {string} method метод
+	 * @return {string}
+	 */
+	static createUrl(apiKey, apiSalt, json, method) {
+		if (method === 'recordingLink') {
+			const base = this.url(method);
+			const sign = Sign.calc(apiKey, apiSalt, json);
+			const { recording_id, expires: timestamp, action } = json;
+			const result = `${base}/${recording_id}/${action}/${apiKey}/${timestamp}/${sign}`;
+			return result;
+		}
+		return '';
 	}
 }
 

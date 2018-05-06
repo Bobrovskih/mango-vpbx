@@ -176,11 +176,11 @@ class VPBX {
 	}
 
 	/**
-	 * Выполняет запрос на получение записи разговора
+	 * Выполняет запрос записи разговора
 	 * @param {object} json параметры
 	 * @param {string} json.recording_id идентификатор записи разговора
-	 * @param {string} json.folder абсолютный путь до папки, для сохранения записи разговора
-	 * @return {Promise<{success: boolean, file: string}>}
+	 * @param {string} [json.folder] абсолютный путь до папки, для сохранения записи разговора
+	 * @param {number|date|string} [json.expires] время жизни ссылки ('MAX' = 1000 лет)
 	 * @async
 	 */
 	async recording(json) {
@@ -188,7 +188,7 @@ class VPBX {
 			return await this.recordingPost(json);
 		}
 		if (json.expires) {
-			return await this.recordingLink(json);
+			return this.recordingLink(json);
 		}
 		return { success: false };
 	}
@@ -317,7 +317,7 @@ class VPBX {
 	}
 
 	/**
-	 * создает обработчики для прослушивания событий от ВАТС
+	 * Создает обработчики для прослушивания событий от ВАТС
 	 * (API RealTime)
 	 * @param {string} url адрес внешней системы
 	 */
@@ -325,6 +325,12 @@ class VPBX {
 		return new Realtime(url);
 	}
 
+	/**
+	 * Получение записи разговора POST запросом
+	 * @param {*} json параметры
+	 * @async
+	 * @private
+	 */
 	async recordingPost(json) {
 		Helpers.setAction(json);
 		const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'recordingPost');
@@ -336,19 +342,22 @@ class VPBX {
 		};
 
 		const { tempLink } = await new Worker(options);
-		const file = await Storage.downloadFile(tempLink, json.folder);
-		return { success: true, file };
+		const recording = await Storage.downloadFile(tempLink, json.folder);
+		const file = recording;
+		return { success: true, recording, file };
 	}
 
-	async recordingLink(json) {
-		const url = Helpers.createRecordingLink(json);
-		const options = {
-			method: 'GET',
-			url,
-			transform: Transform.recordingLink,
-		};
-		const { link } = await new Worker(options);
-		return { success: true, link };
+	/**
+	 * Получение ссылки на запись разговора
+	 * @param {*} json параметры
+	 * @private
+	 */
+	recordingLink(json) {
+		Helpers.setAction(json, 'play');
+		Helpers.mapExpires(json);
+		const recording = Helpers.createUrl(this.apiKey, this.apiSalt, json, 'recordingLink');
+		const link = recording;
+		return { success: true, recording, link };
 	}
 }
 

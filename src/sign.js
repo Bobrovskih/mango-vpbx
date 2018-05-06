@@ -12,21 +12,12 @@ class Sign {
 	 * @return {string}
 	 */
 	static calc(apiKey, apiSalt, json) {
-		json = json.toString();
-		const input = apiKey + json + apiSalt;
-		return crypto.createHash('sha256').update(input).digest('hex');
-	}
-
-	/**
-	 * Получить подпись для запроса ссылки записи разговора
-	 * @param {string} apiKey ключ апи
-	 * @param {string} apiSalt соль
-	 * @param {string} recordingId идентификатор записи
-	 * @param {string} timestamp таймстамп
-	 * @return {string}
-	 */
-	static calcRecordingLink(apiKey, apiSalt, recordingId, timestamp) {
-		const input = apiKey + timestamp + recordingId + apiSalt;
+		const input = (() => {
+			if (json.recording_id && json.expires) {
+				return apiKey + json.expires + json.recording_id + apiSalt;
+			}
+			return apiKey + json.toString() + apiSalt;
+		})();
 		return crypto.createHash('sha256').update(input).digest('hex');
 	}
 }

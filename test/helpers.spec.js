@@ -1,14 +1,9 @@
-const { expect } = require('chai');
+const {
+	expect
+} = require('chai');
 
 const Helpers = require('../src/helpers');
 const parameters = require('../src/parameters');
-
-describe('hello unit', () => {
-	it('true is true', () => {
-		expect(true).equal(true);
-	});
-});
-
 
 describe('метод Helpers.filter ( * - вложенные )', () => {
 	it('неверные *string; statsRequest', () => {
@@ -23,13 +18,13 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 			date_from: '1481630491',
 			date_to: '1481734491'
 		};
-        
+
 		const mask = parameters.statsRequest;
 		const result = Helpers.filter(source, mask);
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('неверные string; statsRequest', () => {
 		const source = {
 			date_from: '1481630491',
@@ -52,7 +47,7 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('неверные string, string; statsRequest ', () => {
 		const source = {
 			date_from: '1481630491',
@@ -76,7 +71,7 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('неверные *boolean, string; statsRequest', () => {
 		const source = {
 			date_from: '1481630491',
@@ -101,7 +96,7 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('неверные *[], []; statsRequest', () => {
 		const source = {
 			date_from: '1481630491',
@@ -111,9 +106,9 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 				extension: '5000',
 				wrongProp: []
 			},
-			wrong: [
-				{ success: true }
-			]
+			wrong: [{
+				success: true
+			}]
 		};
 		const due = {
 			date_from: '1481630491',
@@ -172,7 +167,7 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('пустой {}; users', () => {
 		const source = {};
 		const due = {};
@@ -182,7 +177,7 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 		expect(result).deep.equal(due);
 	});
-    
+
 	it('неверные string; call', () => {
 		const source = {
 			command_id: 'cmd-1241221',
@@ -228,7 +223,9 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 
 	it('callback + sip_headers', () => {
 		const json = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
 			sip_headers: {
 				answer_after: '5',
@@ -237,7 +234,9 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 		};
 
 		const due = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
 			sip_headers: {
 				'Call-Info/answer-after': '5',
@@ -249,44 +248,43 @@ describe('метод Helpers.filter ( * - вложенные )', () => {
 	});
 });
 
-
 describe('метод Helpers.isEmptyObject', () => {
 	it('{}', () => {
 		const source = {};
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(true);
 	});
-    
+
 	it('"hello"', () => {
 		const source = 'hello';
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('10', () => {
 		const source = 10;
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('null', () => {
 		const source = null;
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('true', () => {
 		const source = true;
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('[]', () => {
 		const source = [];
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('', () => {
 		const source = '';
 		const result = Helpers.isEmptyObject(source);
@@ -298,7 +296,7 @@ describe('метод Helpers.isEmptyObject', () => {
 		const result = Helpers.isEmptyObject(source);
 		expect(result).equal(false);
 	});
-    
+
 	it('Symbol({})', () => {
 		const source = Symbol({});
 		const result = Helpers.isEmptyObject(source);
@@ -318,7 +316,7 @@ describe('метод Helpers.typeOf', () => {
 		const result = Helpers.typeOf(source);
 		expect(result).equal('number');
 	});
-	
+
 	it('string', () => {
 		const source = 'hello';
 		const result = Helpers.typeOf(source);
@@ -402,7 +400,7 @@ describe('метод Helpers.isSuccess', () => {
 	it('code 0', () => {
 		const source = 0;
 		const due = true;
-		
+
 		const result = Helpers.isSuccess(source);
 		expect(result).equal(due);
 	});
@@ -410,7 +408,7 @@ describe('метод Helpers.isSuccess', () => {
 	it('code 3103', () => {
 		const source = 3103;
 		const due = false;
-		
+
 		const result = Helpers.isSuccess(source);
 		expect(result).equal(due);
 	});
@@ -418,7 +416,7 @@ describe('метод Helpers.isSuccess', () => {
 	it('code 1000', () => {
 		const source = 1000;
 		const due = true;
-		
+
 		const result = Helpers.isSuccess(source);
 		expect(result).equal(due);
 	});
@@ -455,7 +453,10 @@ describe('метод Helpers.createForm', () => {
 		const source = {
 			apiKey: 'ekfn3fno329f204fj59g23h0f294f23d',
 			apiSalt: 'idn239uf90i1d23283dh204gfh23dj3d',
-			params: { date_from: '1481630491', date_to: '1481734491' },
+			params: {
+				date_from: '1481630491',
+				date_to: '1481734491'
+			},
 			method: 'statsRequest'
 		};
 		const due = {
@@ -542,7 +543,9 @@ describe('метод Helpers.toLowerCase', () => {
 	});
 
 	it('{ field: 10 }', () => {
-		const source = { field: 10 };
+		const source = {
+			field: 10
+		};
 
 		const result = Helpers.toLowerCase(source);
 		expect(result).equal(source);
@@ -550,7 +553,7 @@ describe('метод Helpers.toLowerCase', () => {
 
 	it('cloud', () => {
 		const source = 'cloud';
-		
+
 		const result = Helpers.toLowerCase(source);
 		expect(result).equal(source);
 	});
@@ -629,7 +632,7 @@ describe('метод Helpers.parser', () => {
 			call_id: 'MTo',
 			seq: 1
 		};
-		
+
 		const result = Helpers.parser(source);
 		expect(result).deep.equal(due);
 	});
@@ -637,8 +640,12 @@ describe('метод Helpers.parser', () => {
 
 describe('метод Helpers.fixStatResult', () => {
 	it('фильтр stats', () => {
-		const source = { event: 'stats' };
-		const due = { event: 'stat' };
+		const source = {
+			event: 'stats'
+		};
+		const due = {
+			event: 'stat'
+		};
 
 		const result = Helpers.fixStatResult(source);
 		expect(source).deep.equal(due);
@@ -648,13 +655,19 @@ describe('метод Helpers.fixStatResult', () => {
 describe('метод Helpers.mapSipHeaders', () => {
 	it('answer_after => Call-Info/answer-after', () => {
 		const json = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
-			sip_headers: { answer_after: '5' },
+			sip_headers: {
+				answer_after: '5'
+			},
 		};
 		Helpers.mapSipHeaders(json);
 		const due = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
 			sip_headers: {
 				answer_after: '5',
@@ -666,12 +679,16 @@ describe('метод Helpers.mapSipHeaders', () => {
 
 	it('not modified', () => {
 		const json = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
 		};
 		Helpers.mapSipHeaders(json);
 		const due = {
-			from: { extension: '101' },
+			from: {
+				extension: '101'
+			},
 			to_number: '74952129298',
 		};
 		expect(json).deep.equal(due);
@@ -695,5 +712,98 @@ describe('метод Helpers.mapSipHeaders', () => {
 		};
 		Helpers.mapSipHeaders(json);
 		expect(json).deep.equal(due);
+	});
+});
+
+describe('метод Helpers.setAction', () => {
+	it('recording link play', () => {
+		const json = {
+			recording_id: 'QWkkefdnsfsd32',
+		};
+		Helpers.setAction(json, 'play');
+		const due = {
+			recording_id: 'QWkkefdnsfsd32',
+			action: 'play',
+		};
+		expect(json).deep.equal(due);
+	});
+
+	it('recording post download', () => {
+		const json = {
+			recording_id: 'QWkkefdnsfsd32',
+		};
+		Helpers.setAction(json);
+		const due = {
+			recording_id: 'QWkkefdnsfsd32',
+			action: 'download',
+		};
+		expect(json).deep.equal(due);
+	});
+
+	it('не меняется', () => {
+		const json = {
+			recording_id: 'QWkkefdnsfsd32',
+			action: 'play',
+		};
+		Helpers.setAction(json);
+		const due = {
+			recording_id: 'QWkkefdnsfsd32',
+			action: 'play',
+		};
+		expect(json).deep.equal(due);
+	});
+});
+describe('метод Helpers.mapExpires', () => {
+	it('MAX', () => {
+		const json = {
+			recording_id: 'Fgkhgdfkl32432r',
+			expires: 'MAX',
+		};
+
+		Helpers.mapExpires(json);
+		const result = json.expires;
+		const now = Math.floor(Date.now() / 1000);
+		expect(result).gt(now);
+	});
+
+	it('Date', () => {
+		const expires = new Date(Date.now() + 10000);
+		const json = {
+			recording_id: 'Fgkhgdfkl32432r',
+			expires,
+		};
+
+		Helpers.mapExpires(json);
+		const result = json.expires;
+		const now = Math.floor(Date.now() / 1000);
+		expect(result).gt(now);
+	});
+
+	it('timestamp', () => {
+		const expires = Date.now() + 1000000;
+		const json = {
+			recording_id: 'Fgkhgdfkl32432r',
+			expires,
+		};
+
+		Helpers.mapExpires(json);
+		const result = json.expires;
+		const now = Math.floor(Date.now() / 1000);
+		expect(result).gt(now);
+	});
+});
+
+describe('метод Helpers.', () => {
+	it('recordingLink', () => {
+		const apiKey = '123';
+		const apiSalt = '789';
+		const json = {
+			recording_id: 'Jsgdfg2323=',
+			action: 'play',
+			expires: 1525598918779,
+		};
+		const result = Helpers.createUrl(apiKey, apiSalt, json, 'recordingLink');
+		const due = 'https://app.mango-office.ru/vpbx/queries/recording/link/Jsgdfg2323=/play/123/1525598918779/73ae025f1b4f7e201b2bf8df8a98547faa916a906115c22356cd056ab8edd5cd';
+		expect(result).equal(due);
 	});
 });

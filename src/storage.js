@@ -1,30 +1,36 @@
 const path = require('path');
+const util = require('util');
 const fs = require('fs');
-const https = require('https');
+const rp = require('request-promise');
+
+const writeFileAsync = util.promisify(fs.writeFile);
 
 class Storage {
 	/**
      * Скачивает файл GET запросом
-     * @param {string} urlFile - url-адрес файла
-     * @param {string} folder - путь на диске
+     * @param {string} url url-адрес файла
+     * @param {string} folder путь на диске
+	 * @async
      */
-	static downloadFile(urlFile, folder) {
-		return new Promise((resolve, reject) => {
-			https.get(urlFile, (res) => {
-				const fileName = this.fileName(res);
-				const fullPath = path.join(folder, fileName);
+	static async downloadFile(url, folder) {
+		const options = {
+			url,
+			encoding: null,
+			resolveWithFullResponse: true,
+		};
 
-				const writable = fs.createWriteStream(fullPath);
-				res.pipe(writable)
-					.on('finish', empty => resolve({ success: true, filename: fullPath }))
-					.on('error', error => resolve({ success: false, message: error }));
-			});
-		});
+		const res = await rp(options);
+
+		const fileName = this.fileName(res);
+		const fullPath = path.join(folder, fileName);
+
+		await writeFileAsync(fullPath, res.body);
+		return fullPath;
 	}
 
 	/**
 	 * Вовзращает имя файла из заголовка Content-Disposition
-	 * @param {any} res - респонс из https модуля
+	 * @param {any} res response object request-promise
 	 * @return {string}
 	 */
 	static fileName(res) {

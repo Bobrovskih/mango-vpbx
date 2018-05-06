@@ -270,7 +270,7 @@ const { success, stats } = await vpbx.stats(json);
 ```
 
 ### метод recording
-Получение записи разговора посредством POST запроса
+Получение записи разговора
 
 ```js
 vpbx.recording(json); // => Promise<any>
@@ -279,15 +279,34 @@ vpbx.recording(json); // => Promise<any>
 | --------- | ---- | -------- |
 | json | <code>object</code> | параметры |
 | json.recording_id | <code>string</code> | идентификатор записи разговора |
-| json.folder | <code>string</code> | абсолютный путь до папки, для сохранения записи разговора |
+| [json.folder] | <code>string</code> | абсолютный путь до папки, для сохранения записи разговора |
+| [json.expires] | <code>string, date, number</code> | время жизни ссылки на запись разговора ('MAX' = 1000 лет)|
 
-Пример использования
+Для скачивания записи разговора на диск необходимо задать свойство `json.folder`
+
+Для получения ссылки на запись разговора необходимо задать свойство `json.expires`
+
+
+Примеры использования
+
+Скачивание записи разговора
 ```js
 const json = {
     recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow',
     folder: 'C:/mango-vpbx/downloads/'
 };
-const { success, file } = await vpbx.recording(json);
+const { success, recording } = await vpbx.recording(json);
+console.log(recording); // => C:/mango-vpbx/downloads/date_time_name.mp3
+```
+
+Получение ссылки на запись разговора
+```js
+const json = {
+    recording_id: 'MToxMjI3NTM6MzUwNzMxMDk4NTow',
+    expires: 'MAX',
+};
+const { success, recording } = await vpbx.recording(json);
+console.log(recording); // => https://app.mango-office.ru/vpbx/queries/recording/link/MToxMjI3NTM6MzUwNzMxMDk4NTow/play/4unbf6zukwey1sdbn131nbvc6usianm4/33082514105/01578098d7854d7978773ed13ada3992358e2f09521e2be8726791e53392bd4d
 ```
 
 ### метод users
