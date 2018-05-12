@@ -29,7 +29,7 @@ class VPBX {
 	 * @param {string} [json.command_id] идентификатор запроса
 	 * @param {string} [json.line_number] номер линии (АОН)
 	 * @param {object} [json.sip_headers] SIP заголовки
-	 * @param {string} [json.sip_headers.answer_after]
+	 * @param {string} [json.sip_headers.answer_after] автоответ через n секунд
 	 * @return {Promise<{ success: boolean, code: number, message: string }>}
 	 */
 	call(json) {
@@ -91,7 +91,9 @@ class VPBX {
 	 * @param {object} json параметры
 	 * @param {string} json.date_from timestamp начала
 	 * @param {string} json.date_to timestamp конца
-	 * @param {string} [json.fields] какие поля нужно отгружать
+	 * @param {string} [json.fields] список полей включаемые в выгрузку (через запятую).
+     * возможные значения: "records, start, finish, answer, from_extension, from_number,
+	 * to_extension, to_number, disconnect_reason, line_number, location, entry_id"
 	 * @param {object} [json.from] данные, относящиеся к вызывающему абоненту
 	 * @param {string} [json.from.extension] добавочный номер
 	 * @param {string} [json.from.number] номер телефона
@@ -180,7 +182,8 @@ class VPBX {
 	 * @param {object} json параметры
 	 * @param {string} json.recording_id идентификатор записи разговора
 	 * @param {string} [json.folder] абсолютный путь до папки, для сохранения записи разговора
-	 * @param {number|date|string} [json.expires] время жизни ссылки ('MAX' = 1000 лет)
+	 * @param {number|date|string} [json.expires] время жизни ссылки ('MAX' = 1000 лет),
+	 * для получения ссылки на запись разговора
 	 * @async
 	 */
 	async recording(json) {

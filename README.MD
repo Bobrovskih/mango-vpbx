@@ -37,6 +37,11 @@ async function main() {
 }
 main();
 ```
+### Пример подключения в typescript
+```typescript
+    import VPBX from 'mango-vpbx';
+    const vpbx = new VPBX();
+```
 
 [Все примеры](examples/)
 
@@ -60,9 +65,9 @@ const vpbx = new VPBX(apiKey, apiSalt);
 
 | Параметр  | Тип  | Описание |
 | --------- | ---- | -------- |
-| success  | boolean  |  результат |
-| code   | number   |  код ответа ВАТС  |
-| message  | string   |  сообщение  |
+| success  | <code>boolean</code>  |  результат |
+| code   | <code>number</code>   |  код ответа ВАТС  |
+| message  | <code>string</code>   |  сообщение  |
 
 
 
@@ -248,7 +253,7 @@ vpbx.stats(json); // => Promise<any>
 | json | <code>object</code> | параметры |
 | json.date_from | <code>string</code> | timestamp начала |
 | json.date_to | <code>string</code> | timestamp конца |
-| [json.fields] | <code>string</code> | какие поля нужно отгружать |
+| [json.fields] | <code>string</code> | список полей включаемые в выгрузку (через запятую). Возможные значения: "records, start, finish, answer, from_extension, from_number, to_extension, to_number, disconnect_reason, line_number, location, entry_id" |
 | [json.from] | <code>object</code> | данные, относящиеся к вызывающему абоненту |
 | [json.from.extension] | <code>string</code> | добавочный номер |
 | [json.from.number] | <code>string</code> | номер телефона |
@@ -460,7 +465,7 @@ Realtime.hear(filter, handler); // => void
 | Параметр  | Тип  | Описание |
 | --------- | ---- | -------- |
 | filter  | object  |  фильтр для событий  |
-| handler  | function   |  функция-обработчик  |
+| handler  | function   |  функция обратного вызова  |
 
 Аргумент `filter` должен иметь обязательное свойство `event` - имя события 
 (возможные значения: 'call', 'recording', 'summary', 'dtmf', 'sms', 'callback', 'stats', 'ping')

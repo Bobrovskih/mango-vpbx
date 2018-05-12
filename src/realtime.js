@@ -1,8 +1,6 @@
 const EventEmitter = require('events');
 const Helpers = require('./helpers');
-const {
-	realtime
-} = require('./urls');
+const { realtime } = require('./urls');
 const debug = require('debug')('mango-vpbx:events');
 
 
