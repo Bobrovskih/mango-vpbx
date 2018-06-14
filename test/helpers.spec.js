@@ -793,7 +793,7 @@ describe('метод Helpers.mapExpires', () => {
 	});
 });
 
-describe('метод Helpers.', () => {
+describe('метод Helpers.recordingLink', () => {
 	it('recordingLink', () => {
 		const apiKey = '123';
 		const apiSalt = '789';
@@ -805,5 +805,50 @@ describe('метод Helpers.', () => {
 		const result = Helpers.createUrl(apiKey, apiSalt, json, 'recordingLink');
 		const due = 'https://app.mango-office.ru/vpbx/queries/recording/link/Jsgdfg2323=/play/123/1525598918779/73ae025f1b4f7e201b2bf8df8a98547faa916a906115c22356cd056ab8edd5cd';
 		expect(result).equal(due);
+	});
+});
+
+describe('метод Helpers.normalizeFields', () => {
+	it('без fields, запрос без фильтра', () => {
+		const json = {
+			date_from: '1481630491',
+			date_to: '1481630491',
+		};
+		Helpers.normalizeFields(json);
+		const due = 'records,start,finish,answer,from_extension,from_number,to_extension,to_number,disconnect_reason,line_number,location,entry_id';
+		expect(due).equal(json.fields);
+	});
+	it('без fields, запрос только пропущенных', () => {
+		const json = {
+			date_from: '1481630491',
+			date_to: '1481630491',
+			missed: true,
+		};
+		Helpers.normalizeFields(json);
+		const due = 'records,start,finish,answer,from_extension,from_number,to_extension,to_number,disconnect_reason,line_number,location,entry_id';
+		expect(due).equal(json.fields);
+	});
+
+	it('кастомные fields, запрос без фильтра', () => {
+		const json = {
+			date_from: '1481630491',
+			date_to: '1481630491',
+			fields: 'records, from_number, line_number',
+		};
+		Helpers.normalizeFields(json);
+		const due = 'records, from_number, line_number';
+		expect(due).equal(json.fields);
+	});
+
+	it('кастомные fields, запрос только успешных', () => {
+		const json = {
+			date_from: '1481630491',
+			date_to: '1481630491',
+			fields: 'records, from_number, line_number',
+			missed: true,
+		};
+		Helpers.normalizeFields(json);
+		const due = 'records,from_number,line_number,answer,entry_id';
+		expect(due).equal(json.fields);
 	});
 });
