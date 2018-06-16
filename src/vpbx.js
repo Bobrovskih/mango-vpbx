@@ -1,8 +1,8 @@
-const Helpers = require('./helpers');
-const Worker = require('./worker');
-const Transform = require('./transform');
-const Storage = require('./storage');
-const Realtime = require('./realtime');
+const { Helpers } = require('./helpers');
+const { Worker } = require('./worker');
+const { Transform } = require('./transform');
+const { Storage } = require('./storage');
+const { Realtime } = require('./realtime');
 
 /**
  * Класс для API Виртуальной АТС от MANGO OFFICE
@@ -117,7 +117,7 @@ class VPBX {
         let key;
 
         {
-            Helpers.normalizeFields(json);
+            Helpers.stats.normalizeFields(json);
             const formData = Helpers.createForm(this.apiKey, this.apiSalt, json, 'statsRequest');
             const options = {
                 url: Helpers.url('statsRequest'),
@@ -158,8 +158,8 @@ class VPBX {
             } while (code === 204 && attempt < maxAttempt);
 
             if (success && stats) {
-                stats = Helpers.statsToArray(stats);
-                stats = Helpers.statsFilter(stats, json);
+                stats = Helpers.stats.toArray(stats);
+                stats = Helpers.stats.filter(stats, json);
             }
 
             return {
@@ -393,3 +393,4 @@ class VPBX {
 }
 
 module.exports = VPBX;
+

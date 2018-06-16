@@ -1,6 +1,6 @@
 const {	expect } = require('chai');
 
-const Helpers = require('../src/helpers');
+const { Helpers } = require('../src/helpers');
 const parameters = require('../src/parameters');
 
 describe('метод Helpers.filter ( * - вложенные )', () => {
@@ -358,7 +358,7 @@ describe('метод Helpers.typeOf', () => {
     });
 });
 
-describe('метод Helpers.statsToArray', () => {
+describe('метод Helpers.stats.toArray', () => {
     it('случайная выгрузка', () => {
         const source = '[];1481630614;1481630633;1481630614;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent\r\n[];1481630686;1481630703;1481630687;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent';
         const due = [
@@ -389,7 +389,7 @@ describe('метод Helpers.statsToArray', () => {
                 'abonent'
             ]
         ];
-        const result = Helpers.statsToArray(source);
+        const result = Helpers.stats.toArray(source);
         expect(result).deep.equal(due);
     });
 });
@@ -806,13 +806,13 @@ describe('метод Helpers.recordingLink', () => {
     });
 });
 
-describe('метод Helpers.normalizeFields', () => {
+describe('метод Helpers.stats.normalizeFields', () => {
     it('без fields, запрос без фильтра', () => {
         const json = {
             date_from: '1481630491',
             date_to: '1481630491',
         };
-        Helpers.normalizeFields(json);
+        Helpers.stats.normalizeFields(json);
         const due = 'records,start,finish,answer,from_extension,from_number,to_extension,to_number,disconnect_reason,line_number,location,entry_id';
         expect(due).equal(json.fields);
     });
@@ -822,7 +822,7 @@ describe('метод Helpers.normalizeFields', () => {
             date_to: '1481630491',
             missed: true,
         };
-        Helpers.normalizeFields(json);
+        Helpers.stats.normalizeFields(json);
         const due = 'records,start,finish,answer,from_extension,from_number,to_extension,to_number,disconnect_reason,line_number,location,entry_id';
         expect(due).equal(json.fields);
     });
@@ -833,7 +833,7 @@ describe('метод Helpers.normalizeFields', () => {
             date_to: '1481630491',
             fields: 'records, from_number, line_number',
         };
-        Helpers.normalizeFields(json);
+        Helpers.stats.normalizeFields(json);
         const due = 'records, from_number, line_number';
         expect(due).equal(json.fields);
     });
@@ -845,13 +845,13 @@ describe('метод Helpers.normalizeFields', () => {
             fields: 'records, from_number, line_number',
             fail: true,
         };
-        Helpers.normalizeFields(json);
+        Helpers.stats.normalizeFields(json);
         const due = 'records,from_number,line_number,from_extension,answer,entry_id';
         expect(due).equal(json.fields);
     });
 });
 
-describe('метод Helpers.statsFilter', () => {
+describe('метод Helpers.stats.filter', () => {
     let stats = [];
     let fieldsArr = [];
     let fields = '';
@@ -891,28 +891,28 @@ describe('метод Helpers.statsFilter', () => {
 
     it('success', () => {
         const filter = { success: true };
-        const result = Helpers.statsFilterByType(stats, fieldsArr, filter);
+        const result = Helpers.stats.filterByType(stats, fieldsArr, filter);
         const due = 6;
         expect(due).equal(result.length);
     });
 
     it('fail', () => {
         const filter = { fail: true };
-        const result = Helpers.statsFilterByType(stats, fieldsArr, filter);
+        const result = Helpers.stats.filterByType(stats, fieldsArr, filter);
         const due = 8;
         expect(due).equal(result.length);
     });
 
     it('incoming', () => {
         const filter = { incoming: true };
-        const result = Helpers.statsFilterByDirection(stats, fieldsArr, filter);
+        const result = Helpers.stats.filterByDirection(stats, fieldsArr, filter);
         const due = 2;
         expect(due).equal(result.length);
     });
 
     it('outgoing', () => {
         const filter = { outgoing: true };
-        const result = Helpers.statsFilterByDirection(stats, fieldsArr, filter);
+        const result = Helpers.stats.filterByDirection(stats, fieldsArr, filter);
         const due = 12;
         expect(due).equal(result.length);
     });
@@ -925,7 +925,7 @@ describe('метод Helpers.statsFilter', () => {
             incoming: true,
             success: true,
         };
-        const result = Helpers.statsFilter(stats, json);
+        const result = Helpers.stats.filter(stats, json);
         const due = 0;
         expect(due).equal(result.length);
     });
@@ -938,7 +938,7 @@ describe('метод Helpers.statsFilter', () => {
             outgoing: true,
             fail: true,
         };
-        const result = Helpers.statsFilter(stats, json);
+        const result = Helpers.stats.filter(stats, json);
         const due = 6;
         expect(due).equal(result.length);
     });

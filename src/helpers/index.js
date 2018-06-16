@@ -1,10 +1,11 @@
 const _ = require('lodash');
 const url = require('url');
 
-const messages = require('./messages');
-const urls = require('./urls');
-const Sign = require('./sign');
-const parameters = require('./parameters');
+const messages = require('../messages');
+const urls = require('../urls');
+const parameters = require('../parameters');
+const { Sign } = require('./sign');
+const { Stats } = require('./stats');
 
 /**
  * Класс со вспомогательными методами
@@ -181,104 +182,6 @@ class Helpers {
         return new Promise(resolve => setTimeout(resolve, delay));
     }
 
-    /**
-     * Преобразует статистику вызовов из строки в массив
-     * @param {string} stats статистика вызовов
-     * @return {string[][]}
-     */
-    static statsToArray(stats) {
-        return stats.split('\r\n').map(item => item.split(';'));
-    }
-
-    /**
-     * Фильтрует полученную статистику вызовов
-     * @param {string[][]} stats статистика вызовов
-     * @param { any } json параметры
-     */
-    static statsFilter(stats, json) {
-        const {
-            fields,
-            incoming,
-            outgoing,
-            success,
-            fail,
-        } = json;
-        const hasFilterDirection = Boolean(incoming || outgoing);
-        const hasFilterType = Boolean(success || fail);
-        const hasFilter = hasFilterType || hasFilterDirection;
-
-        if (hasFilter) {
-            const fieldsArr = fields.replace(/\s+/g, '').split(',');
-            if (hasFilterDirection) {
-                stats = Helpers.statsFilterByDirection(stats, fieldsArr, json);
-            }
-            if (hasFilterType) {
-                stats = Helpers.statsFilterByType(stats, fieldsArr, json);
-            }
-            stats = Helpers.statsDropDuplicates(stats, fieldsArr);
-        }
-        return stats;
-    }
-
-    static statsFilterByDirection(stats, fieldsArr, { incoming, outgoing }) {
-        const fromExtIx = fieldsArr.indexOf('from_extension');
-
-        return stats
-            .filter((item) => {
-                const from_extension = item[fromExtIx];
-                
-                const incomingHit = incoming && !from_extension;
-                if (incomingHit) {
-                    return true;
-                }
-                const outgoingHit = outgoing && from_extension;
-                if (outgoingHit) {
-                    return true;
-                }
-                return false;
-            });
-    }
-
-    static statsFilterByType(stats, fieldsArr, { success, fail }) {
-        const entryIx = fieldsArr.indexOf('entry_id');
-        const answerIx = fieldsArr.indexOf('answer');
-        if (success) {
-            return stats.filter(item => item[answerIx] !== '0');
-        }
-        if (fail) {
-            return stats.filter(item => item[answerIx] === '0');
-        }
-        return stats;
-    }
-
-    static statsDropDuplicates(stats, fieldsArr) {
-        const entryIx = fieldsArr.indexOf('entry_id');
-        return stats.reduce((acum, item) => {
-            const alreadyGot = acum.some(row => row[entryIx] === item[entryIx]);
-            if (alreadyGot) return acum;
-            return acum.concat([item]);
-        }, []);
-    }
-
-    /**
-     * Нормализует поле fields для запроса статистики с учетом фильтров
-     * @param {any} json параметры
-     */
-    static normalizeFields(json) {
-        const { success, fail } = json;
-        if (!json.fields) {
-            json.fields = parameters.statsFields.join(',');
-            return;
-        }
-        if (success || fail) {
-            const required = ['from_extension', 'answer', 'entry_id'];
-            const jsonFields = (json.fields || '').replace(/\s+/g, '').split(',');
-            required
-                .filter(field => !jsonFields.includes(field))
-                .forEach(field => jsonFields.push(field));
-            json.fields = jsonFields.join(',');
-        }
-    }
 
     /**
      * Возвращает pathname от переданного урла
@@ -419,6 +322,13 @@ class Helpers {
         }
         return '';
     }
+
+    static get stats() {
+        return Stats;
+    }
 }
 
-module.exports = Helpers;
+module.exports = {
+    Helpers,
+};
+

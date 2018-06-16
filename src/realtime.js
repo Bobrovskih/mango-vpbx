@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
-const Helpers = require('./helpers');
-const { realtime } = require('./urls');
 const debug = require('debug')('mango-vpbx:events');
+const { Helpers } = require('./helpers');
+const { realtime } = require('./urls');
 const { userAgent } = require('./info');
 
 /**
@@ -210,4 +210,7 @@ class Realtime extends EventEmitter {
     }
 }
 
-module.exports = Realtime;
+module.exports = {
+    Realtime,
+};
+

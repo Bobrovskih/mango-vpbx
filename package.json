@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test",
     "lint": "eslint --ext .js examples/ src/ test/",
-    "lint-fix": "eslint --ext .js examples/ src/ test/ --fix"
+    "lint:fix": "eslint --ext .js examples/ src/ test/ --fix"
   },
   "engines": {
     "node": ">=8"

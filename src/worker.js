@@ -1,7 +1,7 @@
 const rp = require('request-promise');
-const Transform = require('./transform');
-const Helpers = require('./helpers');
 const debug = require('debug')('mango-vpbx:worker');
+
+const { Transform } = require('./transform');
 const { userAgent } = require('./info');
 
 class Worker {
@@ -40,4 +40,6 @@ class Worker {
     }
 }
 
-module.exports = Worker;
+module.exports = {
+    Worker,
+};
