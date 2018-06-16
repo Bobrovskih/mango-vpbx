@@ -264,6 +264,10 @@ vpbx.stats(json); // => Promise<any>
 | [json.call_party.extension] | <code>string</code> | добавочный номер |
 | [json.call_party.number] | <code>string</code> | номер телефона |
 | [json.request_id] | <code>string</code> | идентификатор запроса |
+| [json.incoming] | <code>boolean</code> | фильтр - входящие |
+| [json.outgoing] | <code>boolean</code> | фильтр - исходящие |
+| [json.fail] | <code>boolean</code> | фильтр - неуспешные |
+| [json.success] | <code>boolean</code> | фильтр - успешные |
 
 Пример использования
 ```js

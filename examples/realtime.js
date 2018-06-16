@@ -8,7 +8,7 @@ const vpbx = new VPBX();
 
 const events = vpbx.events('http://example.com/mango-vpbx');
 
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(events.call);
 app.use(events.summary);

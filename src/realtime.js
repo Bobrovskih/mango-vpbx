@@ -14,6 +14,7 @@ class Realtime extends EventEmitter {
         this.poolHear = [];
         this.resBody = {
             success: true,
+            userAgent,
         };
     }
 
@@ -88,7 +89,6 @@ class Realtime extends EventEmitter {
                 const payload = Helpers.parser(req.body);
                 this.emit('data', payload);
                 this.emit(en, payload);
-                res.set('User-Agent', userAgent);
                 res.send(this.resBody);
                 return;
             }
@@ -111,7 +111,6 @@ class Realtime extends EventEmitter {
                 const payload = Helpers.parser(req.body);
                 this.invokeHear(eventName, payload);
                 this.emit('data', payload);
-                res.set('User-Agent', userAgent);
                 res.send(this.resBody);
                 return;
             }

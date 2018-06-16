@@ -183,8 +183,8 @@ class Helpers {
 
     /**
      * Преобразует статистику вызовов из строки в массив
-     * @param {string} stats - статистика вызовов
-     * @return {any[]}
+     * @param {string} stats статистика вызовов
+     * @return {string[][]}
      */
     static statsToArray(stats) {
         return stats.split('\r\n').map(item => item.split(';'));
@@ -193,30 +193,71 @@ class Helpers {
     /**
      * Фильтрует полученную статистику вызовов
      * @param {string[][]} stats статистика вызовов
-     * @param { string } fields порядок полей выгрузки
-     * @param { { success: boolean, missed: boolean } } filter фильтр успешные/пропущенные
+     * @param { any } json параметры
      */
-    static statsFilter(stats, fields, filter) {
-        const { success, missed } = filter;
-        if (success || missed) {
-            const fieldsArr = fields.replace(/\s+/g, '').split(',');
-            const entryIx = fieldsArr.indexOf('entry_id');
-            const answerIx = fieldsArr.indexOf('answer');
+    static statsFilter(stats, json) {
+        const {
+            fields,
+            incoming,
+            outgoing,
+            success,
+            fail,
+        } = json;
+        const hasFilterDirection = Boolean(incoming || outgoing);
+        const hasFilterType = Boolean(success || fail);
+        const hasFilter = hasFilterType || hasFilterDirection;
 
-            return stats.reduce((acum, item, index, arr) => {
-                const entry_id = item[entryIx];
-                const answer = item[answerIx];
-                /** звонок уже есть в итоговой выборке */
-                const rule1 = acum.some(row => row[entryIx] === entry_id);
-                if (rule1) {
-                    return acum;
-                }
-                const byEntryId = arr.filter(row => row[entryIx] === entry_id);
-                const rule2 = byEntryId.find(row => row[answerIx] !== '0');
-                return acum;
-            }, []);
+        if (hasFilter) {
+            const fieldsArr = fields.replace(/\s+/g, '').split(',');
+            if (hasFilterDirection) {
+                stats = Helpers.statsFilterByDirection(stats, fieldsArr, json);
+            }
+            if (hasFilterType) {
+                stats = Helpers.statsFilterByType(stats, fieldsArr, json);
+            }
+            stats = Helpers.statsDropDuplicates(stats, fieldsArr);
         }
         return stats;
+    }
+
+    static statsFilterByDirection(stats, fieldsArr, { incoming, outgoing }) {
+        const fromExtIx = fieldsArr.indexOf('from_extension');
+
+        return stats
+            .filter((item) => {
+                const from_extension = item[fromExtIx];
+                
+                const incomingHit = incoming && !from_extension;
+                if (incomingHit) {
+                    return true;
+                }
+                const outgoingHit = outgoing && from_extension;
+                if (outgoingHit) {
+                    return true;
+                }
+                return false;
+            });
+    }
+
+    static statsFilterByType(stats, fieldsArr, { success, fail }) {
+        const entryIx = fieldsArr.indexOf('entry_id');
+        const answerIx = fieldsArr.indexOf('answer');
+        if (success) {
+            return stats.filter(item => item[answerIx] !== '0');
+        }
+        if (fail) {
+            return stats.filter(item => item[answerIx] === '0');
+        }
+        return stats;
+    }
+
+    static statsDropDuplicates(stats, fieldsArr) {
+        const entryIx = fieldsArr.indexOf('entry_id');
+        return stats.reduce((acum, item) => {
+            const alreadyGot = acum.some(row => row[entryIx] === item[entryIx]);
+            if (alreadyGot) return acum;
+            return acum.concat([item]);
+        }, []);
     }
 
     /**
@@ -224,13 +265,13 @@ class Helpers {
      * @param {any} json параметры
      */
     static normalizeFields(json) {
-        const { success, missed } = json;
+        const { success, fail } = json;
         if (!json.fields) {
             json.fields = parameters.statsFields.join(',');
             return;
         }
-        if (success || missed) {
-            const required = ['answer', 'entry_id'];
+        if (success || fail) {
+            const required = ['from_extension', 'answer', 'entry_id'];
             const jsonFields = (json.fields || '').replace(/\s+/g, '').split(',');
             required
                 .filter(field => !jsonFields.includes(field))

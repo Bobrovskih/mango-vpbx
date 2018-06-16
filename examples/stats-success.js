@@ -4,15 +4,16 @@ const vpbx = new VPBX();
 
 const main = async () => {
     const json = {
-        date_from: '1481630491',
-        date_to: '1481734491',
+        date_from: '1529020800',
+        date_to: '1529107200',
+        incoming: true,
         success: true,
     };
     const {
         success,
         stats
     } = await vpbx.stats(json);
-    console.log(success, stats);
+    console.log(success, stats.length);
 };
 
 main();

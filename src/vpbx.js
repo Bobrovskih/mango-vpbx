@@ -106,7 +106,10 @@ class VPBX {
      * @param {string} [json.call_party.number] номер телефона
      *
      * @param {string} [json.request_id] идентификатор запроса
-     *
+     * @param {boolean} [json.outgoing] фильтр - исходящие
+     * @param {boolean} [json.incoming] фильтр - входящие
+     * @param {boolean} [json.fail] фильтр - неуспешные
+     * @param {boolean} [json.success] фильтр - успешные
      * @return {Promise<{ stats: string[][], success: boolean, message: string }>}
      * @async
      */
@@ -156,10 +159,7 @@ class VPBX {
 
             if (success && stats) {
                 stats = Helpers.statsToArray(stats);
-                stats = Helpers.statsFilter(stats, json.fields, {
-                    success: json.success,
-                    missed: json.missed,
-                });
+                stats = Helpers.statsFilter(stats, json);
             }
 
             return {

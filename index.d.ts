@@ -129,6 +129,14 @@ declare class StatsOpions {
     }
     /** идентификатор запроса */
     request_id?: string;
+    /** только входящие звонки */
+    incoming: boolean;
+    /** только исходящие звонки */
+    outgoing: boolean;
+    /** только неуспешные звонки */
+    fail: boolean;
+    /** только успешные звонки */
+    success: boolean;
 }
 
 declare class StatsResponse extends BasicResponse {
