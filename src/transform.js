@@ -140,4 +140,6 @@ class Transform {
     }
 }
 
-module.exports = Transform;
+module.exports = {
+    Transform
+};
