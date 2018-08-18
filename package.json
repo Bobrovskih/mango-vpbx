@@ -6,7 +6,9 @@
   "scripts": {
     "test": "mocha test",
     "lint": "eslint --ext .js examples/ src/ test/",
-    "lint:fix": "eslint --ext .js examples/ src/ test/ --fix"
+    "lint:fix": "eslint --ext .js examples/ src/ test/ --fix",
+    "cov": "nyc npm test",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "engines": {
     "node": ">=8"
@@ -38,10 +40,12 @@
   },
   "devDependencies": {
     "chai": "4.1.2",
+    "codev": "0.0.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
-    "mocha": "4.1.0"
+    "mocha": "4.1.0",
+    "nyc": "^12.0.2"
   },
   "types": "./index.d.ts"
 }

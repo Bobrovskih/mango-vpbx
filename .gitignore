@@ -1,4 +1,7 @@
-node_modules/
+node_modules
 package-lock.json
-.vscode/
-downloads/
+.vscode
+downloads
+coverage.lcov
+.nyc_output
+coverage

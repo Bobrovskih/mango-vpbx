@@ -1,3 +1,7 @@
+
+ [![npm version](https://badge.fury.io/js/mango-vpbx.svg)](https://www.npmjs.com/package/mango-vpbx) [![Build status branch:master](https://travis-ci.org/Bobrovskih/mango-vpbx.svg?branch=master)](https://travis-ci.org/Bobrovskih/mango-vpbx)
+ [![coverage](https://codecov.io/gh/Bobrovskih/mango-vpbx/branch/master/graph/badge.svg)](https://codecov.io/gh/Bobrovskih/mango-vpbx)
+ 
 ## Библиотека для API Виртуальной АТС от MANGO OFFICE
 
 [![API Виртуальной АТС от MANGO OFFICE](https://www.mango-office.ru/upload/iblock/d11/api-icon.png "API Виртуальной АТС от MANGO OFFICE")](https://www.mango-office.ru/support/virtualnaya_ats/integratsiya_api/obshchie_voprosy_po_api_vats_mango_office/ "API Виртуальной АТС от MANGO OFFICE")
