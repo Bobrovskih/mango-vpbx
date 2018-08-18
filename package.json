@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "chai": "4.1.2",
-    "codev": "0.0.1",
+    "codecov": "^3.0.4",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-airbnb-base": "12.1.0",
