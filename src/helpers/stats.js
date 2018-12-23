@@ -7,7 +7,10 @@ class Stats {
      * @return {string[][]}
      */
     static toArray(stats) {
-        return stats.split('\r\n').map(item => item.split(';'));
+        return stats
+            .trim()
+            .split('\r\n')
+            .map(item => item.split(';'));
     }
 
     /**

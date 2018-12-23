@@ -360,7 +360,7 @@ describe('метод Helpers.typeOf', () => {
 
 describe('метод Helpers.stats.toArray', () => {
     it('случайная выгрузка', () => {
-        const source = '[];1481630614;1481630633;1481630614;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent\r\n[];1481630686;1481630703;1481630687;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent';
+        const source = '[];1481630614;1481630633;1481630614;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent\r\n[];1481630686;1481630703;1481630687;131;sip:a.mango@domain.mangosip.ru;;sip:user2@domain.mangosip.ru;1110;;abonent\r\n';
         const due = [
             [
                 '[]',

@@ -1,4 +1,4 @@
-const VPBX = require('../');
+const VPBX = require('..');
 
 const vpbx = new VPBX();
 
