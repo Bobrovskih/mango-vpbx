@@ -141,9 +141,7 @@ class Realtime extends EventEmitter {
         this.poolHear
             .filter(hear => hear.filter.event === name)
             .forEach((hear) => {
-                const {
-                    filter
-                } = hear;
+                const { filter } = hear;
                 if (this.testFilter(filter, json)) {
                     hear.handler.call(this, json);
                 }
@@ -213,4 +211,3 @@ class Realtime extends EventEmitter {
 module.exports = {
     Realtime,
 };
-

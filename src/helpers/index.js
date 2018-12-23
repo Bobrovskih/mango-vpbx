@@ -45,7 +45,7 @@ class Helpers {
         const pathArr = [];
         let jsonCopy = _.cloneDeep(json);
 
-        function bypass(obj) {
+        const bypass = (obj) => {
             for (const key in obj) {
                 if (!_.has(obj, key)) continue;
                 const prop = obj[key];
@@ -71,7 +71,7 @@ class Helpers {
             }
             pathArr.pop();
             return jsonCopy;
-        }
+        };
         return bypass(jsonCopy);
     }
 
@@ -199,10 +199,7 @@ class Helpers {
      * @return {any}
      */
     static parser(body) {
-        const {
-            json,
-            data
-        } = body;
+        const { json, data } = body;
         const payload = JSON.parse(json || data || {});
         return payload;
     }
@@ -331,4 +328,3 @@ class Helpers {
 module.exports = {
     Helpers,
 };
-

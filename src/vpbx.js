@@ -123,15 +123,11 @@ class VPBX {
                 url: Helpers.url('statsRequest'),
                 formData
             };
-            ({
-                key
-            } = await new Worker(options));
+            ({ key } = await new Worker(options));
         }
 
         {
-            const formData = Helpers.createForm(this.apiKey, this.apiSalt, {
-                key
-            }, 'statsResult');
+            const formData = Helpers.createForm(this.apiKey, this.apiSalt, { key }, 'statsResult');
             const options = {
                 url: Helpers.url('statsResult'),
                 transform: Transform.statsResult,
@@ -362,9 +358,7 @@ class VPBX {
             transform: Transform.recordingPost
         };
 
-        const {
-            tempLink
-        } = await new Worker(options);
+        const { tempLink } = await new Worker(options);
         const recording = await Storage.downloadFile(tempLink, json.folder);
         const file = recording;
         return {
@@ -393,4 +387,3 @@ class VPBX {
 }
 
 module.exports = VPBX;
-
