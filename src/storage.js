@@ -34,7 +34,7 @@ class Storage {
      * @return {string}
      */
     static fileName(res) {
-        const contDisposition = res.headers['content-disposition'];
+        const contDisposition = res.headers['content-disposition'] || '';
         const pattern = /filename="(.*)"/i;
         const match = contDisposition.match(pattern);
         if (!match) {
