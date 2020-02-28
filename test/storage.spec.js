@@ -5,7 +5,7 @@ const { Storage } = require('../src/storage');
 
 describe('Storage', () => {
     it('downloadFile', async () => {
-        const url = 'http://dctninja.ru/index.html';
+        const url = 'https://raw.githubusercontent.com/Bobrovskih/mango-vpbx/master/README.MD';
         const filePath = await Storage.downloadFile(url, __dirname);
         const stat = fs.statSync(filePath);
         expect(true).equal(!!stat);
