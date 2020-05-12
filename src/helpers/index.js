@@ -200,7 +200,7 @@ class Helpers {
      */
     static parser(body) {
         const { json, data } = body;
-        const payload = JSON.parse(json || data || {});
+        const payload = JSON.parse(json || data || null);
         return payload;
     }
 

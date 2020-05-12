@@ -634,6 +634,11 @@ describe('метод Helpers.parser', () => {
         const result = Helpers.parser(source);
         expect(result).deep.equal(due);
     });
+
+    it('пустые параметры', () => {
+        const result = Helpers.parser({});
+        expect(result).equal(null);
+    });
 });
 
 describe('метод Helpers.fixStatResult', () => {
