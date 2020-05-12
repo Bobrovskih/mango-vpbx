@@ -34,7 +34,7 @@
     "body-parser": "1.18.2",
     "debug": "3.1.0",
     "express": "4.16.2",
-    "lodash": "4.17.10",
+    "lodash": "4.17.15",
     "request": "2.88.0",
     "request-promise": "4.2.2"
   },
@@ -46,7 +46,7 @@
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
     "mocha": "4.1.0",
-    "nyc": "^12.0.2"
+    "nyc": "^15.0.0"
   },
   "types": "./index.d.ts"
 }
